@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomTiles:
   - type: 0
-    tile: {fileID: 0}
+    tile: {fileID: 2617283692336962742, guid: 76975efdec55581449b72fa051673da3, type: 3}
   - type: 1
-    tile: {fileID: 0}
+    tile: {fileID: 2617283692336962742, guid: 76975efdec55581449b72fa051673da3, type: 3}
   - type: 2
-    tile: {fileID: 0}
+    tile: {fileID: 2617283692336962742, guid: 76975efdec55581449b72fa051673da3, type: 3}
   - type: 3
     tile: {fileID: 2617283692336962742, guid: 76975efdec55581449b72fa051673da3, type: 3}

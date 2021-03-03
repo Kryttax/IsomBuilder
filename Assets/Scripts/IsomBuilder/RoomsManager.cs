@@ -29,9 +29,14 @@ public class RoomsManager : MonoBehaviour
         {
             for (int j = 0; j < 9; ++j)
             {
-                emptyTiles.Add(Tile.CreateTile(new Vector2(i,j), this.gameObject, emptyTilePrefab));
+                emptyTiles.Add(Tile.CreateTile(new Vector2(i,j), instance.gameObject, emptyTilePrefab));
             }
         }
+    }
+
+    public void PaintTransparentTiles()
+    {
+
     }
 
     public void StartRoomConstruction(int roomType = 0)
@@ -59,8 +64,10 @@ public class RoomsManager : MonoBehaviour
 
         if(index != -1)
         {
-            Destroy(emptyTiles[index]);
+            Destroy(emptyTiles[index].gameObject);
             emptyTiles.RemoveAt(index);
+
+            Debug.Log("Tile Removed at: " + position);
         }
         else
         {
@@ -71,6 +78,27 @@ public class RoomsManager : MonoBehaviour
     private int GetEmptyTileAt(Vector2 position)
     {
         return emptyTiles.FindIndex(x => (int)x.tilePosition.x == (int)position.x && (int)x.tilePosition.y == (int)position.y);
+    }
+
+    public void FillRoom(Vector2 initPos, Vector2 endPos)
+    {
+        Vector2[] points;
+        Debug.Log("Init Point: " + initPos + ".. End Point: " + endPos);
+
+        points = RectangleHelper.GetRectanglePoints(initPos, endPos);
+        Debug.Log("Rectangle Size: " + points.Length);
+        for (int i = 0; i < points.Length; ++i)
+        {
+            Debug.Log("Rectangle Point: " + points[i]);
+        }
+
+        for(int i = 0; i < points.Length; ++i)
+        {
+            Debug.Log("Adding Tile from rectangle: " + points[i]);
+            currentRoom.AddTile(new Vector2(points[i].x, points[i].y));
+        }
+
+        FinishRoomConstruction();
     }
 
     public void FinishRoomConstruction()

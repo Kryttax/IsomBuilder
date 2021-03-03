@@ -5,11 +5,19 @@ using UnityEngine;
 public class MouseSelector : MonoBehaviour
 {
     Vector3 prevMousePos;
+    bool buildingMode = false;
+
+    public Texture selectTexture;
+    public Shader transparentShaderMask;
 
     private void Update()
     {
         RaycastToMouse();
     }
+
+    private Vector2 orgBoxPos = Vector2.zero;
+    private Vector2 endBoxPos = Vector2.zero;
+
 
     private void RaycastToMouse()
     {
@@ -19,7 +27,7 @@ public class MouseSelector : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
         {
             Vector3 point = hit.point;
-            Vector3 gridPoint = TileMath.SnapPoint(point);
+            Vector2 gridPoint = TileMath.SnapPoint(point);
 
             //Debug.Log("Hit with object: " + hit.collider.gameObject.name + " at position: " + gridPoint);
 
@@ -30,50 +38,44 @@ public class MouseSelector : MonoBehaviour
                     Debug.Log("Mouse Pressed!");
                     prevMousePos = gridPoint;
                     RoomsManager.instance.StartRoomConstruction();
-                    RoomsManager.instance.AddTileToRoom(gridPoint);
+                    //RoomsManager.instance.AddTileToRoom(gridPoint);
+                    buildingMode = true;
+                    orgBoxPos = gridPoint;
                 }
 
                 if (Input.GetMouseButton(0))
                 {
-                    Debug.Log("Mouse being HELD!");
+                    //Debug.Log("Mouse being HELD!");
 
-                    if (prevMousePos != gridPoint)
-                    {
-                        RoomsManager.instance.AddTileToRoom(gridPoint);
-                    }
+                    //if (prevMousePos != gridPoint && buildingMode)
+                    //{
+                    //    RoomsManager.instance.AddTileToRoom(gridPoint);
+                    //}
+                    
                 }
 
                 if (Input.GetMouseButtonUp(0))
                 {
                     Debug.Log("Mouse Released!");
-                    RoomsManager.instance.FinishRoomConstruction();
+                    
+                    if (buildingMode)
+                    {
+                        endBoxPos = gridPoint;
+                        RoomsManager.instance.FillRoom(orgBoxPos, endBoxPos);
+                    }
+                    buildingMode = false;
+
+                    orgBoxPos = Vector2.zero;
+                    endBoxPos = Vector2.zero;
+
                 }
 
-                //if (Input.GetMouseButtonDown(1))
-                //{
-                //    Debug.Log("Mouse Pressed!");
-                //    prevMousePos = gridPoint;
-                //    RoomsManager.instance.StartRoomConstruction(1);
-                //    RoomsManager.instance.AddTileToRoom(gridPoint);
-                //}
-
-                //if (Input.GetMouseButton(1))
-                //{
-                //    Debug.Log("Mouse being HELD!");
-
-                //    if (prevMousePos != gridPoint)
-                //    {
-                //        RoomsManager.instance.AddTileToRoom(gridPoint);
-                //    }
-                //}
-
-                //if (Input.GetMouseButtonUp(1))
-                //{
-                //    Debug.Log("Mouse Released!");
-
-                //    RoomsManager.instance.FinishRoomConstruction();
-                //}
             }
+            //else
+            //{
+            //        orgBoxPos = Vector2.zero;
+            //        endBoxPos = Vector2.zero;
+            //}
 
 
 

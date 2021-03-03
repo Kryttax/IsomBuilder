@@ -5,10 +5,12 @@ using UnityEngine;
 
 public class Room : MonoBehaviour
 {
+    [SerializeField]
+    private RoomData data;
+
     private static Tile[] tileGrid;
     private static List<Vector2> roomSize;
 
-    private RoomData data;
 
     public Room()
     {
@@ -43,6 +45,7 @@ public class Room : MonoBehaviour
 
     public void FillRoomWithTiles()
     {
+        Debug.Log("Room Size: " + roomSize.Count);
         tileGrid = new Tile[roomSize.Count];
         for (int i = 0; i < roomSize.Count; ++i)
         {
@@ -50,8 +53,8 @@ public class Room : MonoBehaviour
             //Tile newTile = UnityEngine.Object.Instantiate(new Tile(roomSize[i], this));
             //GameObject newTile = UnityEngine.Object.Instantiate(new GameObject());
             //Tile addTile = newTile.AddComponent<Tile>() as Tile;
-            RoomsManager.instance.RemoveEmptyTile(roomSize[i]);
             tileGrid[i] = Tile.CreateTile(roomSize[i], this.gameObject, data.GetRoomTile(RoomData.ROOM_TILE_TYPE.FLOOR));
+            RoomsManager.instance.RemoveEmptyTile(roomSize[i]);
         }
     }
 }

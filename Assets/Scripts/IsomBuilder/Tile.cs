@@ -34,7 +34,7 @@ public class Tile : MonoBehaviour
     {
         get
         {
-            if (tileRef == null)
+            //if (tileRef == null)
             {
                 tileRef = new GameObject("Tile Object");
             }
@@ -52,9 +52,9 @@ public class Tile : MonoBehaviour
         thisTile.tilePosition = gridPosition;
         //thisTile.tilePosition = new Vector3(thisTile.tilePosition.x + tilePosition.x, thisTile.tilePosition.y, thisTile.tilePosition.z + tilePosition.y);
         thisTile.roomParent = roomParent;
-        thisTile.transform.SetParent(roomParent.transform);
         thisTile.tilePrefabRef = GameObject.Instantiate(tilePrefab, thisTile.transform);
         thisTile.transform.position = new Vector3(thisTile.tilePosition.x , 0, thisTile.tilePosition.y); 
+        thisTile.transform.SetParent(roomParent.transform);
         return thisTile;
     }
 
