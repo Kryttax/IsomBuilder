@@ -1,12 +1,32 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//[CreateAssetMenu(fileName = "New TileData", menuName = "Tile Data", order = 51)]
+//public class TileData : ScriptableObject
+//{
+//    // BUILDABLE | NON_BUILDABLE: BEFORE ROOM CREATION 
+//    // EMPTY | OCCUPIED: AFTER ROOM CREATION (OBJECT/AI LOGIC)
+//    public enum TILE_STATUS { BUILDABLE, NON_BUILDABLE, EMPTY, OCCUPIED }
+
+//    public TILE_STATUS currentStatus { get; private set; }
+//    public GameObject roomParent { get; private set; }
+//    public Vector2 tilePosition { get; private set; }
+//}
+
+
+[Serializable]
 public class Tile : MonoBehaviour
 {
-    public Vector3 tilePosition { get; private set; }
-    private GameObject roomParent;
+    // BUILDABLE | NON_BUILDABLE: BEFORE ROOM CREATION 
+    // EMPTY | OCCUPIED: AFTER ROOM CREATION (OBJECT/AI LOGIC)
+    public enum TILE_STATUS { BUILDABLE, NON_BUILDABLE, EMPTY, OCCUPIED }
 
+    public TILE_STATUS currentStatus { get; private set; }
+    public GameObject roomParent { get; private set; }
+    public Vector2 tilePosition { get; private set; }
     private GameObject tilePrefabRef;
 
     private static GameObject tileRef;
@@ -22,18 +42,24 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public static Tile CreateTile(Vector2 newPosition, GameObject parent, GameObject tileType)
+    public static Tile CreateTile(Vector2 gridPosition, GameObject roomParent, GameObject tilePrefab)
     {
         var thisTile = TileObj.AddComponent<Tile>();
 
-        thisTile.tilePrefabRef = tileType;
+        //thisTile.tilePrefabRef = tileType;
 
-        thisTile.tilePosition = thisTile.tilePrefabRef.transform.position;
-        thisTile.tilePosition = new Vector3(thisTile.tilePosition.x + newPosition.x, thisTile.tilePosition.y, thisTile.tilePosition.z + newPosition.y);
-        thisTile.roomParent = parent;
-
-        tileRef = Object.Instantiate(thisTile.tilePrefabRef, thisTile.roomParent.transform);
-        thisTile.transform.position = thisTile.tilePosition;
+        //thisTile.tilePosition = thisTile.tilePrefabRef.transform.position;
+        thisTile.tilePosition = gridPosition;
+        //thisTile.tilePosition = new Vector3(thisTile.tilePosition.x + tilePosition.x, thisTile.tilePosition.y, thisTile.tilePosition.z + tilePosition.y);
+        thisTile.roomParent = roomParent;
+        thisTile.transform.SetParent(roomParent.transform);
+        thisTile.tilePrefabRef = GameObject.Instantiate(tilePrefab, thisTile.transform);
+        thisTile.transform.position = new Vector3(thisTile.tilePosition.x , 0, thisTile.tilePosition.y); 
         return thisTile;
+    }
+
+    public static void RemoveTile()
+    {
+        Destroy(TileObj);
     }
 }

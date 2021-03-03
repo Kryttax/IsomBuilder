@@ -8,7 +8,7 @@ public class Room : MonoBehaviour
     private static Tile[] tileGrid;
     private static List<Vector2> roomSize;
 
-    public GameObject []roomTiles;
+    private RoomData data;
 
     public Room()
     {
@@ -51,7 +51,7 @@ public class Room : MonoBehaviour
             //GameObject newTile = UnityEngine.Object.Instantiate(new GameObject());
             //Tile addTile = newTile.AddComponent<Tile>() as Tile;
             RoomsManager.instance.RemoveEmptyTile(roomSize[i]);
-            tileGrid[i] = Tile.CreateTile(roomSize[i], this.gameObject, roomTiles[0]);
+            tileGrid[i] = Tile.CreateTile(roomSize[i], this.gameObject, data.GetRoomTile(RoomData.ROOM_TILE_TYPE.FLOOR));
         }
     }
 }
