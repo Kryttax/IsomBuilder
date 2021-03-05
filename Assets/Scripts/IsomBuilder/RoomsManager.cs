@@ -10,6 +10,7 @@ public class RoomsManager : MonoBehaviour
     private Room currentRoom;
 
     private List<Tile> emptyTiles;
+    private List<Vector2> occupiedTiles;
 
     public GameObject emptyTilePrefab;
     public GameObject[] roomTypes;
@@ -24,6 +25,7 @@ public class RoomsManager : MonoBehaviour
     {
         rooms = new List<Room>();
         emptyTiles = new List<Tile>();
+        occupiedTiles = new List<Vector2>();
 
         for (int i = 0; i < 9; ++i)
         {
@@ -64,6 +66,7 @@ public class RoomsManager : MonoBehaviour
 
         if(index != -1)
         {
+            occupiedTiles.Add(new Vector2(emptyTiles[index].tilePosition.x, emptyTiles[index].tilePosition.y));
             Destroy(emptyTiles[index].gameObject);
             emptyTiles.RemoveAt(index);
 
@@ -75,7 +78,15 @@ public class RoomsManager : MonoBehaviour
         }
     }
 
-    private int GetEmptyTileAt(Vector2 position)
+    public bool IsTileInsideGrid(Vector2 position)
+    {
+        if (emptyTiles.FindIndex(x => (int)x.tilePosition.x == (int)position.x && (int)x.tilePosition.y == (int)position.y) == -1 &&
+            occupiedTiles.FindIndex(x => (int)x.x == (int)position.x && (int)x.y == (int)position.y) == -1)
+            return false;
+        return true;
+    }
+
+    public int GetEmptyTileAt(Vector2 position)
     {
         return emptyTiles.FindIndex(x => (int)x.tilePosition.x == (int)position.x && (int)x.tilePosition.y == (int)position.y);
     }

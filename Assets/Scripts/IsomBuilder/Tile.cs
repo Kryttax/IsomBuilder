@@ -42,7 +42,7 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public static Tile CreateTile(Vector2 gridPosition, GameObject roomParent, GameObject tilePrefab)
+    public static Tile CreateTile(Vector2 gridPosition, GameObject roomParent, GameObject tilePrefab = null)
     {
         var thisTile = TileObj.AddComponent<Tile>();
 
@@ -52,10 +52,21 @@ public class Tile : MonoBehaviour
         thisTile.tilePosition = gridPosition;
         //thisTile.tilePosition = new Vector3(thisTile.tilePosition.x + tilePosition.x, thisTile.tilePosition.y, thisTile.tilePosition.z + tilePosition.y);
         thisTile.roomParent = roomParent;
-        thisTile.tilePrefabRef = GameObject.Instantiate(tilePrefab, thisTile.transform);
+
+        if (tilePrefab)
+            thisTile.tilePrefabRef = GameObject.Instantiate(tilePrefab, thisTile.transform);
+
         thisTile.transform.position = new Vector3(thisTile.tilePosition.x , 0, thisTile.tilePosition.y); 
         thisTile.transform.SetParent(roomParent.transform);
         return thisTile;
+    }
+
+    public void UpdateTile(GameObject newTilePrefab)
+    {
+        var thisTile = GetComponent<Tile>();
+        if(thisTile.tilePrefabRef)
+            Destroy(thisTile.tilePrefabRef);
+        thisTile.tilePrefabRef = GameObject.Instantiate(newTilePrefab, thisTile.transform);
     }
 
     public static void RemoveTile()

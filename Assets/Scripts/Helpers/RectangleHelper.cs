@@ -52,4 +52,48 @@ public class RectangleHelper
     {
         return (x1 + 1 - x2) * (y1 + 1 - y2);
     }
+
+    //public static RoomData.ROOM_TILE_TYPE FindNeighbours(Vector2 centralTile)
+    //{
+    //    int neighbours = 0;   // Hash sum to return
+    //    //int hashValue = 1; // Increases as power of 2 (1,2,4,8,...128)
+        
+    //    //char centerTile = roomTiles[x, y]; // Cache center tile
+
+    //    for (int i = -1; i <= 1; i++)
+    //    {
+    //        for (int j = -1; j <= 1; j++)
+    //        {
+    //            if (i == 0 && j == 0) continue; // Skip center tile
+    //            if (RoomsManager.instance.GetEmptyTileAt(new Vector2(centralTile.x + i, centralTile.y + j)) != -1)
+    //            {
+    //                neighbours++;
+    //            }
+    //        }
+    //    }
+
+    //    RoomData.ROOM_TILE_TYPE tileType;
+
+    //    switch (neighbours)
+    //    {
+    //        case 8:
+    //            tileType = RoomData.ROOM_TILE_TYPE.FLOOR;
+    //            break;
+    //        case 7:
+    //            tileType = RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER;
+    //            break;
+    //        case 5:
+    //            tileType = RoomData.ROOM_TILE_TYPE.SIDE;
+    //            break;
+    //        case 3:
+    //            tileType = RoomData.ROOM_TILE_TYPE.CONVEX_CORNER;
+    //            break;
+    //        default:
+    //            tileType = RoomData.ROOM_TILE_TYPE.FLOOR;
+    //            Debug.LogWarning("This neighbour number: " + neighbours + " is not defined!");
+    //            break;
+    //    }
+
+    //    return tileType;
+    //}
 }

@@ -9,7 +9,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New RoomData", menuName = "Room Data", order = 51)]
 public class RoomData : ScriptableObject
 {
-    public enum ROOM_TILE_TYPE { FLOOR, CONCAVE_CORNER, CONVEX_CORNER, SIDE }
+    public enum ROOM_TILE_TYPE { FLOOR, CONCAVE_CORNER, CONVEX_CORNER, SIDE, END_CORNER, TWO_SIDED }
 
     [Serializable]
     public struct TileTypes
