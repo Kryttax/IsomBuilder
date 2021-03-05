@@ -64,8 +64,15 @@ public class Tile : MonoBehaviour
     public void UpdateTile(GameObject newTilePrefab)
     {
         var thisTile = GetComponent<Tile>();
-        if(thisTile.tilePrefabRef)
-            Destroy(thisTile.tilePrefabRef);
+
+        if (thisTile.tilePrefabRef)
+        {
+            Debug.Log("Destroying previous tile prefab and updating...");
+            Destroy(thisTile.tilePrefabRef.gameObject);
+        }
+        else
+            Debug.Log("Updating tile prefab...");
+
         thisTile.tilePrefabRef = GameObject.Instantiate(newTilePrefab, thisTile.transform);
     }
 

@@ -72,10 +72,10 @@ public class RoomsManager : MonoBehaviour
 
             Debug.Log("Tile Removed at: " + position);
         }
-        else
-        {
-            Debug.LogWarning("Position Given: " + position);
-        }
+        //else
+        //{
+        //    Debug.LogWarning("Position Given: " + position);
+        //}
     }
 
     public bool IsTileInsideGrid(Vector2 position)
@@ -94,22 +94,28 @@ public class RoomsManager : MonoBehaviour
     public void FillRoom(Vector2 initPos, Vector2 endPos)
     {
         Vector2[] points;
-        Debug.Log("Init Point: " + initPos + ".. End Point: " + endPos);
+        Debug.Log("Init Point: " + initPos + "... End Point: " + endPos);
 
         points = RectangleHelper.GetRectanglePoints(initPos, endPos);
-        Debug.Log("Rectangle Size: " + points.Length);
-        for (int i = 0; i < points.Length; ++i)
-        {
-            Debug.Log("Rectangle Point: " + points[i]);
-        }
+        //Debug.Log("Rectangle Size: " + points.Length);
+        //for (int i = 0; i < points.Length; ++i)
+        //{
+        //    Debug.Log("Rectangle Point: " + points[i]);
+        //}
 
         for(int i = 0; i < points.Length; ++i)
         {
-            Debug.Log("Adding Tile from rectangle: " + points[i]);
+            //Debug.Log("Adding Tile from rectangle: " + points[i]);
             currentRoom.AddTile(new Vector2(points[i].x, points[i].y));
         }
 
-        FinishRoomConstruction();
+        currentRoom.FillRoomWithTiles();
+        //FinishRoomConstruction();
+    }
+
+    public void UpdateRoom()
+    {
+        currentRoom.UpdateRoomTiles();
     }
 
     public void FinishRoomConstruction()

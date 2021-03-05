@@ -75,6 +75,14 @@ public class Room : MonoBehaviour
         //    tileGrid[i].UpdateTile(data.GetRoomTile(Room.FindNeighbours(roomSize[i])));
     }
 
+    public void UpdateRoomTiles()
+    {
+        for (int i = 0; i < roomSize.Count; ++i)
+        {
+            tileGrid[i].UpdateTile(data.GetRoomTile(Room.FindNeighbours(roomSize[i])));
+        }
+    }
+
     private static RoomData.ROOM_TILE_TYPE FindNeighbours(Vector2 centralTile)
     {
         int neighbours = 0;   // sum
@@ -102,8 +110,14 @@ public class Room : MonoBehaviour
             case 7:
                 tileType = RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER;
                 break;
+            case 6:
+                tileType = RoomData.ROOM_TILE_TYPE.FLOOR;
+                break;
             case 5:
                 tileType = RoomData.ROOM_TILE_TYPE.SIDE;
+                break;
+            case 4:
+                tileType = RoomData.ROOM_TILE_TYPE.CONVEX_CORNER;
                 break;
             case 3:
                 tileType = RoomData.ROOM_TILE_TYPE.CONVEX_CORNER;
@@ -120,7 +134,7 @@ public class Room : MonoBehaviour
                 break;
         }
 
-        Debug.Log("Tile Option: " + neighbours);
+        //Debug.Log("Tile Option: " + neighbours);
 
         return tileType;
     }

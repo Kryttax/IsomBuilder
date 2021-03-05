@@ -10,6 +10,12 @@ public class MouseSelector : MonoBehaviour
     public Texture selectTexture;
     public Shader transparentShaderMask;
 
+
+    private void Awake()
+    {
+        finishRoomButton.onClick.AddListener(() => { OnFinishRoomButton(); });
+    }
+
     private void Update()
     {
         RaycastToMouse();
@@ -18,6 +24,8 @@ public class MouseSelector : MonoBehaviour
     private Vector2 orgBoxPos = Vector2.zero;
     private Vector2 endBoxPos = Vector2.zero;
 
+    [SerializeField]
+    private UnityEngine.UI.Button finishRoomButton;
 
     private void RaycastToMouse()
     {
@@ -37,9 +45,12 @@ public class MouseSelector : MonoBehaviour
                 {
                     Debug.Log("Mouse Pressed!");
                     prevMousePos = gridPoint;
-                    RoomsManager.instance.StartRoomConstruction();
+                    if(!buildingMode)
+                    {
+                        RoomsManager.instance.StartRoomConstruction();
+                        buildingMode = true;
+                    }
                     //RoomsManager.instance.AddTileToRoom(gridPoint);
-                    buildingMode = true;
                     orgBoxPos = gridPoint;
                 }
 
@@ -62,8 +73,9 @@ public class MouseSelector : MonoBehaviour
                     {
                         endBoxPos = gridPoint;
                         RoomsManager.instance.FillRoom(orgBoxPos, endBoxPos);
+                        RoomsManager.instance.UpdateRoom();
                     }
-                    buildingMode = false;
+                    //buildingMode = false;
 
                     orgBoxPos = Vector2.zero;
                     endBoxPos = Vector2.zero;
@@ -80,6 +92,15 @@ public class MouseSelector : MonoBehaviour
 
 
 
+        }
+    }
+
+    public void OnFinishRoomButton()
+    {
+        if (buildingMode)
+        {
+            buildingMode = false;
+            RoomsManager.instance.FinishRoomConstruction();
         }
     }
 }
