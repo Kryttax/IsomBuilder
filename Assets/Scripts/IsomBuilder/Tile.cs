@@ -25,6 +25,7 @@ public class Tile : MonoBehaviour
     public enum TILE_STATUS { BUILDABLE, NON_BUILDABLE, EMPTY, OCCUPIED }
 
     public TILE_STATUS currentStatus { get; private set; }
+    public RoomData.ROOM_TILE_TYPE tileType { get; private set; }
     public GameObject roomParent { get; private set; }
     public Vector2 tilePosition { get; private set; }
     private GameObject tilePrefabRef;
@@ -42,7 +43,7 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public static Tile CreateTile(Vector2 gridPosition, GameObject roomParent, GameObject tilePrefab = null)
+    public static Tile CreateTile(Vector2 gridPosition, GameObject roomParent, GameObject tilePrefab = null, RoomData.ROOM_TILE_TYPE type = RoomData.ROOM_TILE_TYPE.EMPTY)
     {
         var thisTile = TileObj.AddComponent<Tile>();
 
@@ -54,26 +55,33 @@ public class Tile : MonoBehaviour
         thisTile.roomParent = roomParent;
 
         if (tilePrefab)
+        {
             thisTile.tilePrefabRef = GameObject.Instantiate(tilePrefab, thisTile.transform);
+            thisTile.tileType = type;
+        }
 
         thisTile.transform.position = new Vector3(thisTile.tilePosition.x , 0, thisTile.tilePosition.y); 
         thisTile.transform.SetParent(roomParent.transform);
         return thisTile;
     }
 
-    public void UpdateTile(GameObject newTilePrefab)
+    public void UpdateTile(GameObject newTilePrefab, RoomData.ROOM_TILE_TYPE newType)
     {
-        var thisTile = GetComponent<Tile>();
-
-        if (thisTile.tilePrefabRef)
+        //var thisTile = GetComponent<Tile>();
+        
+        if (tilePrefabRef && newType != tileType)
         {
-            Debug.Log("Destroying previous tile prefab and updating...");
-            Destroy(thisTile.tilePrefabRef.gameObject);
+            Debug.LogWarning("Destroying previous tile prefab and updating...");
+            Destroy(tilePrefabRef.gameObject);
+
+            tilePrefabRef = GameObject.Instantiate(newTilePrefab, this.transform);
+            tileType = newType;
+
         }
         else
-            Debug.Log("Updating tile prefab...");
+            Debug.LogWarning("Tile prefab not updating...");
 
-        thisTile.tilePrefabRef = GameObject.Instantiate(newTilePrefab, thisTile.transform);
+       
     }
 
     public static void RemoveTile()

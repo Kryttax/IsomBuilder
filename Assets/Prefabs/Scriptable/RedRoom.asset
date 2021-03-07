@@ -14,14 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomTiles:
   - type: 0
-    tile: {fileID: 2617283692336962742, guid: 76975efdec55581449b72fa051673da3, type: 3}
+    tile: {fileID: 2018432455069222755, guid: a37117927dd61c546991deebc9a38e30, type: 3}
   - type: 1
-    tile: {fileID: 8194525688583580554, guid: 81b74a905a5811e43a4585ca53b39333, type: 3}
-  - type: 2
-    tile: {fileID: 8194525688583580554, guid: 81b74a905a5811e43a4585ca53b39333, type: 3}
-  - type: 3
     tile: {fileID: 4501855269213124549, guid: 1ae1f87ffdf7d4742be65a21265809f0, type: 3}
+  - type: 2
+    tile: {fileID: 2018432455069222755, guid: a37117927dd61c546991deebc9a38e30, type: 3}
+  - type: 3
+    tile: {fileID: 2617283692336962742, guid: 76975efdec55581449b72fa051673da3, type: 3}
   - type: 5
-    tile: {fileID: 1516507678248166758, guid: dafcfbfe2eca68442860553361598088, type: 3}
-  - type: 4
     tile: {fileID: 7038660400557750377, guid: 14783fbbdab87bc4c941a82b4b79cf7a, type: 3}
+  - type: 4
+    tile: {fileID: 8194525688583580554, guid: 81b74a905a5811e43a4585ca53b39333, type: 3}
+  - type: 6
+    tile: {fileID: 1516507678248166758, guid: dafcfbfe2eca68442860553361598088, type: 3}

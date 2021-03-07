@@ -37,6 +37,7 @@ public class MouseSelector : MonoBehaviour
             Vector3 point = hit.point;
             Vector2 gridPoint = TileMath.SnapPoint(point);
 
+           
             //Debug.Log("Hit with object: " + hit.collider.gameObject.name + " at position: " + gridPoint);
 
             if(hit.collider.tag == "Empty")
@@ -82,6 +83,10 @@ public class MouseSelector : MonoBehaviour
 
                 }
 
+            }
+            else
+            {
+                Debug.Log("Hit with TILE TYPE: " + RoomsManager.instance.GetTileType(gridPoint) + " at position: " + gridPoint);
             }
             //else
             //{

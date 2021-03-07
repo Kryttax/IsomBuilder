@@ -36,11 +36,6 @@ public class RoomsManager : MonoBehaviour
         }
     }
 
-    public void PaintTransparentTiles()
-    {
-
-    }
-
     public void StartRoomConstruction(int roomType = 0)
     {
         //GameObject newRoom = Object.Instantiate(new GameObject());
@@ -111,6 +106,25 @@ public class RoomsManager : MonoBehaviour
 
         currentRoom.FillRoomWithTiles();
         //FinishRoomConstruction();
+    }
+
+    public RoomData.ROOM_TILE_TYPE GetTileType(Vector2 tilePosition)
+    {
+        if (currentRoom)
+        {
+            RoomData.ROOM_TILE_TYPE type = currentRoom.GetTileTypeInRoom(tilePosition);
+
+            if (type != RoomData.ROOM_TILE_TYPE.EMPTY)
+                return type;
+        }
+
+        //Check other rooms
+        Room room = rooms.Find(x => x.IsTileInRoom(tilePosition));
+        if (room)
+            return room.GetTileTypeInRoom(tilePosition);
+
+        Debug.LogError("Tile not found in RoomsManager!");
+        return RoomData.ROOM_TILE_TYPE.EMPTY;
     }
 
     public void UpdateRoom()
