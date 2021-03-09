@@ -71,15 +71,15 @@ public class Tile : MonoBehaviour
         
         if (tilePrefabRef && newType != tileType)
         {
-            Debug.LogWarning("Destroying previous tile prefab and updating...");
+            //Debug.LogWarning("Destroying previous tile prefab and updating...");
             Destroy(tilePrefabRef.gameObject);
 
             tilePrefabRef = GameObject.Instantiate(newTilePrefab, this.transform);
             tileType = newType;
 
         }
-        else
-            Debug.LogWarning("Tile prefab not updating...");
+        //else
+        //    Debug.LogWarning("Tile prefab not updating...");
 
        
     }

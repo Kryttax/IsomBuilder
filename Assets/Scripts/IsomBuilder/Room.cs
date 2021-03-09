@@ -118,13 +118,13 @@ public class Room : MonoBehaviour
                 if (IsTileInRoom(new Vector2(centralTile.x + i, centralTile.y + j)))
                 {
                     if (i == 0 && j == 1)
-                        tileCoordinates[neighbours] = COORDINATES.UP;
+                        tileCoordinates.Add(COORDINATES.UP);
                     if(i == 0 && j == -1)
-                        tileCoordinates[neighbours] = COORDINATES.DOWN;
-                    if(i == -1 && j == 0)
-                        tileCoordinates[neighbours] = COORDINATES.LEFT;
-                    if(i == 1 && j == 0)
-                        tileCoordinates[neighbours] = COORDINATES.RIGHT;
+                        tileCoordinates.Add(COORDINATES.DOWN);
+                    if (i == -1 && j == 0)
+                        tileCoordinates.Add(COORDINATES.LEFT);
+                    if (i == 1 && j == 0)
+                        tileCoordinates.Add(COORDINATES.RIGHT);
 
                     neighbours++;
                 }
@@ -142,11 +142,13 @@ public class Room : MonoBehaviour
                 tileType = RoomData.ROOM_TILE_TYPE.SIDE;
                 break;
             case 2:
-                if (tileCoordinates.Contains(COORDINATES.LEFT) && tileCoordinates.Contains(COORDINATES.RIGHT)
-                    || tileCoordinates.Contains(COORDINATES.UP) && tileCoordinates.Contains(COORDINATES.DOWN))
+                if ((tileCoordinates.Contains(COORDINATES.LEFT) && tileCoordinates.Contains(COORDINATES.RIGHT))
+                    || (tileCoordinates.Contains(COORDINATES.UP) && tileCoordinates.Contains(COORDINATES.DOWN)))
                     tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED;
                 else
                     tileType = RoomData.ROOM_TILE_TYPE.CONVEX_CONCAVE;
+
+                Debug.LogWarning("Two adjacent neighbours of type : " + tileType);
                 break;
             case 1:
                 tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_CONVEX;
@@ -167,7 +169,12 @@ public class Room : MonoBehaviour
         RoomData.ROOM_TILE_TYPE tileType = FindAdjacentNeighbours(centralTile, out adjacentNeighbours);
 
         if (tileType == RoomData.ROOM_TILE_TYPE.EMPTY)
+        {
+            Debug.LogWarning("Empty adjacent neighbours!");
             return tileType;
+        }
+
+        Debug.LogWarning("Adjacent: " + adjacentNeighbours);
 
         int neighbours = 0;
 
@@ -189,19 +196,16 @@ public class Room : MonoBehaviour
                 switch (neighbours)
                 {
                     case 4:
-                        tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED;
+                        tileType = RoomData.ROOM_TILE_TYPE.FLOOR;
                         break;
                     case 3:
-                        tileType = RoomData.ROOM_TILE_TYPE.CONVEX_CORNER;
+                        tileType = RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER;
                         break;
                     case 2:
                         tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED;
                         break;
                     case 1:
-                        if (tileType == RoomData.ROOM_TILE_TYPE.CONVEX_CONCAVE)
-                            tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_CONVEX;
-                        else if (tileType == RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED)
-                            tileType = RoomData.ROOM_TILE_TYPE.CONVEX_CORNER;
+                        tileType = RoomData.ROOM_TILE_TYPE.TRIPLE_CONCAVE;
                         break;
                     default:
                         //Return adjacent type
@@ -260,27 +264,27 @@ public class Room : MonoBehaviour
                 break;
         }
 
-        switch (neighbours)
-        {
-            case 4:
-                tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED;
-                break;
-            case 3:
-                tileType = RoomData.ROOM_TILE_TYPE.CONVEX_CORNER;
-                break;
-            case 2:
-                tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED;
-                break;
-            case 1:
-                if (tileType == RoomData.ROOM_TILE_TYPE.CONVEX_CONCAVE)
-                    tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_CONVEX;
-                else if (tileType == RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED)
-                    tileType = RoomData.ROOM_TILE_TYPE.CONVEX_CORNER;
-                break;
-            default:
-                //Return adjacent type
-                break;
-        }
+        //switch (neighbours)
+        //{
+        //    case 4:
+        //        tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED;
+        //        break;
+        //    case 3:
+        //        tileType = RoomData.ROOM_TILE_TYPE.CONVEX_CORNER;
+        //        break;
+        //    case 2:
+        //        tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED;
+        //        break;
+        //    case 1:
+        //        if (tileType == RoomData.ROOM_TILE_TYPE.CONVEX_CONCAVE)
+        //            tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_CONVEX;
+        //        else if (tileType == RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED)
+        //            tileType = RoomData.ROOM_TILE_TYPE.CONVEX_CORNER;
+        //        break;
+        //    default:
+        //        //Return adjacent type
+        //        break;
+        //}
 
         Debug.Log("Tile Option: " + neighbours);
 
@@ -289,57 +293,62 @@ public class Room : MonoBehaviour
 
     private RoomData.ROOM_TILE_TYPE FindNeighbours(Vector2 centralTile)
     {
-        int neighbours = 0;   // sum
-
-        //char centerTile = roomTiles[x, y]; // Cache center tile
-        for (int i = -1; i <= 1; i++)
-        {
-            for (int j = -1; j <= 1; j++)
-            {
-                if (i == 0 && j == 0) continue; // Skip center tile
-                if (IsTileInRoom(new Vector2(centralTile.x + i, centralTile.y + j)))
-                {
-                    neighbours++;
-                }
-            }
-        }
-
-        RoomData.ROOM_TILE_TYPE tileType;
-
-        switch (neighbours)
-        {
-            case 8:
-                tileType = RoomData.ROOM_TILE_TYPE.FLOOR;
-                break;
-            case 7:
-                tileType = RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER;
-                break;
-            case 6:
-                tileType = RoomData.ROOM_TILE_TYPE.SIDE;    //OR TWO-SIDED
-                break;
-            case 5:
-                tileType = RoomData.ROOM_TILE_TYPE.SIDE;    //OR CONVEX
-                break;
-            case 4:
-                tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED;
-                break;
-            case 3:
-                tileType = RoomData.ROOM_TILE_TYPE.CONVEX_CORNER;
-                break;
-            case 2:
-                tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED;
-                break;
-            case 1:
-                tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_CONVEX;
-                break;
-            default:
-                tileType = RoomData.ROOM_TILE_TYPE.EMPTY;
-                Debug.LogWarning("This neighbour number: " + neighbours + " is not defined!");
-                break;
-        }
-
-        Debug.Log("Tile Option: " + neighbours);
-
-        return tileType;
+        return FindDistantNeighbours(centralTile);
     }
+
+    //private RoomData.ROOM_TILE_TYPE FindNeighbours(Vector2 centralTile)
+    //{
+    //    int neighbours = 0;   // sum
+
+    //    //char centerTile = roomTiles[x, y]; // Cache center tile
+    //    for (int i = -1; i <= 1; i++)
+    //    {
+    //        for (int j = -1; j <= 1; j++)
+    //        {
+    //            if (i == 0 && j == 0) continue; // Skip center tile
+    //            if (IsTileInRoom(new Vector2(centralTile.x + i, centralTile.y + j)))
+    //            {
+    //                neighbours++;
+    //            }
+    //        }
+    //    }
+
+    //    RoomData.ROOM_TILE_TYPE tileType;
+
+    //    switch (neighbours)
+    //    {
+    //        case 8:
+    //            tileType = RoomData.ROOM_TILE_TYPE.FLOOR;
+    //            break;
+    //        case 7:
+    //            tileType = RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER;
+    //            break;
+    //        case 6:
+    //            tileType = RoomData.ROOM_TILE_TYPE.SIDE;    //OR TWO-SIDED
+    //            break;
+    //        case 5:
+    //            tileType = RoomData.ROOM_TILE_TYPE.SIDE;    //OR CONVEX
+    //            break;
+    //        case 4:
+    //            tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED;
+    //            break;
+    //        case 3:
+    //            tileType = RoomData.ROOM_TILE_TYPE.CONVEX_CORNER;
+    //            break;
+    //        case 2:
+    //            tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED;
+    //            break;
+    //        case 1:
+    //            tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_CONVEX;
+    //            break;
+    //        default:
+    //            tileType = RoomData.ROOM_TILE_TYPE.EMPTY;
+    //            Debug.LogWarning("This neighbour number: " + neighbours + " is not defined!");
+    //            break;
+    //    }
+
+    //    Debug.Log("Tile Option: " + neighbours);
+
+    //    return tileType;
+    //}
 }
