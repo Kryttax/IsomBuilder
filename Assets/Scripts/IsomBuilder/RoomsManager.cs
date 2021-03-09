@@ -45,6 +45,14 @@ public class RoomsManager : MonoBehaviour
         currentRoom = Instantiate(roomTypes[roomType]).GetComponent<Room>();
     }
 
+    public bool StartRoomDestruction()
+    {
+        //GameObject newRoom = Object.Instantiate(new GameObject());
+        //Room addRoom = newRoom.AddComponent<Room>() as Room;
+        //currentRoom = addRoom;
+        return currentRoom != null;
+    }
+
     public void AddTileToRoom(Vector3 tilePos)
     {
         currentRoom.AddTile(new Vector2(tilePos.x, tilePos.z));
@@ -53,6 +61,19 @@ public class RoomsManager : MonoBehaviour
     public void RemoveTileFromRoom(Vector3 tilePos)
     {
         currentRoom.RemoveTile(new Vector2(tilePos.x, tilePos.z));
+    }
+
+    public void AddEmptyTile(Vector2 position)
+    {
+        int index = GetOccupiedTileAt(position);
+
+        if (index != -1)
+        {
+            emptyTiles.Add(Tile.CreateTile(position, instance.gameObject, emptyTilePrefab));
+            occupiedTiles.RemoveAt(index);
+        }
+        else
+            Debug.LogError("This tile "+ position +" is already empty, cannot add a empty tile here.");
     }
 
     public void RemoveEmptyTile(Vector2 position)
@@ -67,10 +88,6 @@ public class RoomsManager : MonoBehaviour
 
             Debug.Log("Tile Removed at: " + position);
         }
-        //else
-        //{
-        //    Debug.LogWarning("Position Given: " + position);
-        //}
     }
 
     public bool IsTileInsideGrid(Vector2 position)
@@ -79,6 +96,11 @@ public class RoomsManager : MonoBehaviour
             occupiedTiles.FindIndex(x => (int)x.x == (int)position.x && (int)x.y == (int)position.y) == -1)
             return false;
         return true;
+    }
+
+    public int GetOccupiedTileAt(Vector2 position)
+    {
+        return occupiedTiles.FindIndex(x => (int)x.x == (int)position.x && (int)x.y == (int)position.y);
     }
 
     public int GetEmptyTileAt(Vector2 position)
@@ -106,6 +128,21 @@ public class RoomsManager : MonoBehaviour
 
         currentRoom.FillRoomWithTiles();
         //FinishRoomConstruction();
+    }
+
+    public void EmptyRoom(Vector2 initPos, Vector2 endPos)
+    {
+        Vector2[] points;
+
+        points = RectangleHelper.GetRectanglePoints(initPos, endPos);
+
+        for (int i = 0; i < points.Length; ++i)
+        {
+            //Debug.Log("Adding Tile from rectangle: " + points[i]);
+            currentRoom.RemoveTile(new Vector2(points[i].x, points[i].y));
+        }
+
+        currentRoom.ClearRoomWithTiles();
     }
 
     public RoomData.ROOM_TILE_TYPE GetTileType(Vector2 tilePosition)

@@ -12,7 +12,7 @@ public class Room : MonoBehaviour
     private static List<Vector2> roomSize;      //Global Room Size
 
     private List<Vector2> tempRoomSize;         //Resets every time player expands/shrinks currentRoom
-
+    private List<Vector2> tempRoomRemoval;
     private enum COORDINATES { UP, DOWN, LEFT, RIGHT }
 
 
@@ -21,6 +21,7 @@ public class Room : MonoBehaviour
         roomSize = new List<Vector2>();
         tileGrid = new List<Tile>();
         tempRoomSize = new List<Vector2>();
+        tempRoomRemoval = new List<Vector2>();
     }
 
     public void AddTile(Vector2 tilePosition)
@@ -38,6 +39,7 @@ public class Room : MonoBehaviour
         int index = -1;
         if(IsTileInRoom(tilePosition, out index))
         {
+            tempRoomRemoval.Add(tilePosition);
             roomSize.RemoveAt(index);
         }
     }
@@ -93,6 +95,28 @@ public class Room : MonoBehaviour
 
         //for (int i = 0; i < roomSize.Count; ++i)
         //    tileGrid[i].UpdateTile(data.GetRoomTile(Room.FindNeighbours(roomSize[i])));
+    }
+
+
+    public void ClearRoomWithTiles()
+    {
+        //Debug.Log("Room Size: " + roomSize.Count);
+
+        for (int i = 0; i < tempRoomRemoval.Count; ++i)
+            RoomsManager.instance.AddEmptyTile(tempRoomRemoval[i]);
+
+        for (int i = 0; i < tempRoomRemoval.Count; ++i)
+        {
+            int tileToDelete = tileGrid.FindIndex(x => x.tilePosition == tempRoomRemoval[i]);
+
+            if(tileToDelete != -1)
+            {
+                tileGrid[tileToDelete].RemoveTile();
+                tileGrid.RemoveAt(tileToDelete);
+            }
+        }
+
+        tempRoomRemoval.Clear();
     }
 
     public void UpdateRoomTiles()

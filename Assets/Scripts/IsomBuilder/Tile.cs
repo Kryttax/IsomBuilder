@@ -84,8 +84,8 @@ public class Tile : MonoBehaviour
        
     }
 
-    public static void RemoveTile()
+    public void RemoveTile()
     {
-        Destroy(TileObj);
+        Destroy(this.gameObject);
     }
 }
