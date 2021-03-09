@@ -27,3 +27,9 @@ MonoBehaviour:
     tile: {fileID: 8194525688583580554, guid: 81b74a905a5811e43a4585ca53b39333, type: 3}
   - type: 6
     tile: {fileID: 1516507678248166758, guid: dafcfbfe2eca68442860553361598088, type: 3}
+  - type: 7
+    tile: {fileID: 1516507678248166758, guid: dafcfbfe2eca68442860553361598088, type: 3}
+  - type: 8
+    tile: {fileID: 1516507678248166758, guid: dafcfbfe2eca68442860553361598088, type: 3}
+  - type: 9
+    tile: {fileID: 1516507678248166758, guid: dafcfbfe2eca68442860553361598088, type: 3}
