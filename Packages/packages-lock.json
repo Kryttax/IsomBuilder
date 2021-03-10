@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.jimmycushnie.succ": {
+      "version": "https://github.com/JimmyCushnie/SUCC.git#unity",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "4e4c4e1ae3bcd6cdbc6cee12a6507b4f1f30bee3"
+    },
     "com.unity.collab-proxy": {
       "version": "1.2.16",
       "depth": 0,

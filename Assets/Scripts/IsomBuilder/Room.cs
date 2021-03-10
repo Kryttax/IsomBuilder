@@ -3,25 +3,87 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
+public class RoomProperties
+{
+    private List<Tile> tileGrid;         //Global Room Tile Reference
+    private List<Vector2> roomSize;      //Global Room Size
+
+    public RoomProperties()
+    {
+        tileGrid = new List<Tile>();
+        roomSize = new List<Vector2>();
+    }
+}
+
 public class Room : MonoBehaviour
 {
+    private enum COORDINATES { UP, DOWN, LEFT, RIGHT }
+
     [SerializeField]
     private RoomData data;
 
-    private static List<Tile> tileGrid;         //Global Room Tile Reference
-    private static List<Vector2> roomSize;      //Global Room Size
+    private RoomProperties properties;
+    //private List<Tile> tileGrid;         //Global Room Tile Reference
+    //private List<Vector2> roomSize;      //Global Room Size
 
     private List<Vector2> tempRoomSize;         //Resets every time player expands/shrinks currentRoom
     private List<Vector2> tempRoomRemoval;
-    private enum COORDINATES { UP, DOWN, LEFT, RIGHT }
 
 
     public Room()
     {
-        roomSize = new List<Vector2>();
-        tileGrid = new List<Tile>();
+        properties = new RoomProperties();
+        //roomSize = new List<Vector2>();
+        //tileGrid = new List<Tile>();
         tempRoomSize = new List<Vector2>();
         tempRoomRemoval = new List<Vector2>();
+    }
+
+    private static GameObject roomRef;
+    public static GameObject RoomObj
+    {
+        get
+        {
+            //if (tileRef == null)
+            {
+                roomRef = new GameObject("Room Object");
+            }
+            return roomRef;
+        }
+    }
+
+    public static Room CreateRoom()
+    {
+        var thisRoom = RoomObj.AddComponent<Room>();
+
+        thisRoom.properties = new RoomProperties();
+        //thisRoom.roomSize = new List<Vector2>();
+        //thisRoom.tileGrid = new List<Tile>();
+        thisRoom.tempRoomSize = new List<Vector2>();
+        thisRoom.tempRoomRemoval = new List<Vector2>();
+
+        return thisRoom;
+    }
+
+    public void UpdateTile(GameObject newTilePrefab, RoomData.ROOM_TILE_TYPE newType)
+    {
+        //var thisTile = GetComponent<Tile>();
+
+        if (tilePrefabRef && newType != tileData.tileType)
+        {
+            //Debug.LogWarning("Destroying previous tile prefab and updating...");
+            Destroy(tilePrefabRef.gameObject);
+
+            tilePrefabRef = GameObject.Instantiate(newTilePrefab, this.transform);
+            tileData.tileType = newType;
+
+        }
+        //else
+        //    Debug.LogWarning("Tile prefab not updating...");
+
+
     }
 
     public void AddTile(Vector2 tilePosition)
@@ -46,12 +108,12 @@ public class Room : MonoBehaviour
 
     public RoomData.ROOM_TILE_TYPE GetTileTypeInRoom(Vector2 tilePosition)
     {
-        int result = tileGrid.FindIndex(pos => pos.tilePosition.x == tilePosition.x && pos.tilePosition.y == tilePosition.y);
+        int result = tileGrid.FindIndex(pos => pos.tileData.tilePosition.x == tilePosition.x && pos.tileData.tilePosition.y == tilePosition.y);
 
         if (result == -1)
             return RoomData.ROOM_TILE_TYPE.EMPTY;
         
-        return tileGrid[result].tileType;
+        return tileGrid[result].tileData.tileType;
     }
 
     public bool IsTileInRoom(Vector2 tilePosition)
@@ -74,40 +136,48 @@ public class Room : MonoBehaviour
         return true;
     }
 
-    public void FillRoomWithTiles()
-    {
-        //Debug.Log("Room Size: " + roomSize.Count);
+    //public void FillRoomWithTiles()
+    //{
+    //    //Debug.Log("Room Size: " + roomSize.Count);
 
-        for(int i = 0; i < tempRoomSize.Count; ++i)
+    //    for(int i = 0; i < tempRoomSize.Count; ++i)
+    //        RoomsManager.instance.RemoveEmptyTile(tempRoomSize[i]);
+
+    //    for (int i = 0; i < tempRoomSize.Count; ++i)
+    //    {
+    //        //tileGrid[(int)tilePosition.x, (int)tilePosition.y] = new Tile(tilePosition, this);
+    //        //Tile newTile = UnityEngine.Object.Instantiate(new Tile(roomSize[i], this));
+    //        //GameObject newTile = UnityEngine.Object.Instantiate(new GameObject());
+    //        //Tile addTile = newTile.AddComponent<Tile>() as Tile;
+    //        tileGrid.Add(Tile.CreateTile(tempRoomSize[i], this.gameObject, data.GetRoomTile(FindNeighbours(roomSize[i]))));
+
+    //    }
+
+    //    tempRoomSize.Clear();
+
+    //    //for (int i = 0; i < roomSize.Count; ++i)
+    //    //    tileGrid[i].UpdateTile(data.GetRoomTile(Room.FindNeighbours(roomSize[i])));
+    //}
+
+    public void CreateRoomTiles()
+    {
+        for (int i = 0; i < tempRoomSize.Count; ++i)
             RoomsManager.instance.RemoveEmptyTile(tempRoomSize[i]);
 
         for (int i = 0; i < tempRoomSize.Count; ++i)
-        {
-            //tileGrid[(int)tilePosition.x, (int)tilePosition.y] = new Tile(tilePosition, this);
-            //Tile newTile = UnityEngine.Object.Instantiate(new Tile(roomSize[i], this));
-            //GameObject newTile = UnityEngine.Object.Instantiate(new GameObject());
-            //Tile addTile = newTile.AddComponent<Tile>() as Tile;
             tileGrid.Add(Tile.CreateTile(tempRoomSize[i], this.gameObject, data.GetRoomTile(FindNeighbours(roomSize[i]))));
-            
-        }
 
         tempRoomSize.Clear();
-
-        //for (int i = 0; i < roomSize.Count; ++i)
-        //    tileGrid[i].UpdateTile(data.GetRoomTile(Room.FindNeighbours(roomSize[i])));
     }
 
-
-    public void ClearRoomWithTiles()
+    public void ClearRoomTiles()
     {
-        //Debug.Log("Room Size: " + roomSize.Count);
-
         for (int i = 0; i < tempRoomRemoval.Count; ++i)
             RoomsManager.instance.AddEmptyTile(tempRoomRemoval[i]);
 
         for (int i = 0; i < tempRoomRemoval.Count; ++i)
         {
-            int tileToDelete = tileGrid.FindIndex(x => x.tilePosition == tempRoomRemoval[i]);
+            int tileToDelete = tileGrid.FindIndex(x => x.tileData.tilePosition == tempRoomRemoval[i]);
 
             if(tileToDelete != -1)
             {
@@ -124,7 +194,7 @@ public class Room : MonoBehaviour
         for (int i = 0; i < roomSize.Count; ++i)
         {
             RoomData.ROOM_TILE_TYPE type = FindNeighbours(roomSize[i]);
-            tileGrid.Find(x => x.tilePosition == roomSize[i]).UpdateTile(data.GetRoomTile(type), type);
+            tileGrid.Find(x => x.tileData.tilePosition == roomSize[i]).UpdateTile(data.GetRoomTile(type), type);
         }
     }
 

@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using IsomBuilder;
 
 public class RoomsManager : MonoBehaviour
 {
     public static RoomsManager instance = null;
+
 
     private List<Room> rooms;
     private Room currentRoom;
@@ -34,6 +36,24 @@ public class RoomsManager : MonoBehaviour
                 emptyTiles.Add(Tile.CreateTile(new Vector2(i,j), instance.gameObject, emptyTilePrefab));
             }
         }
+
+        Serializer.Config.Set("Total Rooms", rooms.Count);
+        Serializer.Config.Set("Empty Tiles", emptyTiles.Count);
+        Serializer.Config.Set("Occupied Tiles", occupiedTiles.Count);
+        Serializer.Config.Set("Vector2 Test", new Vector2(0, 50));
+        //int exampleValue = Serializer.Config.Get<int>("Empty Tiles");
+        int size = Serializer.Config.Get<int>("Total Rooms");
+
+        if(size > 0)
+        {
+            for(int i = 0; i < size; ++i)
+            {
+                Room newRoom = Instantiate(roomTypes[0]).GetComponent<Room>();
+                newRoom = 
+                rooms = Serializer.Config.Get<List<Room>("Rooms");
+            }
+        }
+        //Debug.LogWarning("Config FILE Empty tiles Value: " + exampleValue);
     }
 
     public void StartRoomConstruction(int roomType = 0)
@@ -41,7 +61,7 @@ public class RoomsManager : MonoBehaviour
         //GameObject newRoom = Object.Instantiate(new GameObject());
         //Room addRoom = newRoom.AddComponent<Room>() as Room;
         //currentRoom = addRoom;
-
+        currentRoom
         currentRoom = Instantiate(roomTypes[roomType]).GetComponent<Room>();
     }
 
@@ -82,7 +102,7 @@ public class RoomsManager : MonoBehaviour
 
         if(index != -1)
         {
-            occupiedTiles.Add(new Vector2(emptyTiles[index].tilePosition.x, emptyTiles[index].tilePosition.y));
+            occupiedTiles.Add(new Vector2(emptyTiles[index].tileData.tilePosition.x, emptyTiles[index].tileData.tilePosition.y));
             Destroy(emptyTiles[index].gameObject);
             emptyTiles.RemoveAt(index);
 
@@ -92,7 +112,7 @@ public class RoomsManager : MonoBehaviour
 
     public bool IsTileInsideGrid(Vector2 position)
     {
-        if (emptyTiles.FindIndex(x => (int)x.tilePosition.x == (int)position.x && (int)x.tilePosition.y == (int)position.y) == -1 &&
+        if (emptyTiles.FindIndex(x => (int)x.tileData.tilePosition.x == (int)position.x && (int)x.tileData.tilePosition.y == (int)position.y) == -1 &&
             occupiedTiles.FindIndex(x => (int)x.x == (int)position.x && (int)x.y == (int)position.y) == -1)
             return false;
         return true;
@@ -105,7 +125,7 @@ public class RoomsManager : MonoBehaviour
 
     public int GetEmptyTileAt(Vector2 position)
     {
-        return emptyTiles.FindIndex(x => (int)x.tilePosition.x == (int)position.x && (int)x.tilePosition.y == (int)position.y);
+        return emptyTiles.FindIndex(x => (int)x.tileData.tilePosition.x == (int)position.x && (int)x.tileData.tilePosition.y == (int)position.y);
     }
 
     public void FillRoom(Vector2 initPos, Vector2 endPos)
