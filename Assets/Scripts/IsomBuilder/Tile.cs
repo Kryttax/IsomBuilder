@@ -5,15 +5,15 @@ using UnityEngine;
 
 
 [Serializable]
-public class TileData
+public class TileProperties
 {
-    public TileData()
+    public TileProperties()
     {
         tilePosition = new Vector2();
         tileType = RoomData.ROOM_TILE_TYPE.EMPTY;
     }
 
-    public TileData(RoomData.ROOM_TILE_TYPE type, Vector2 position)
+    public TileProperties(RoomData.ROOM_TILE_TYPE type, Vector2 position)
     {
         tileType = type;
         tilePosition = position;
@@ -39,7 +39,7 @@ public class Tile : MonoBehaviour
     //public RoomData.ROOM_TILE_TYPE tileType { get; private set; }
     //public Vector2 tilePosition { get; private set; }
 
-    public TileData tileData { get; private set; }
+    public TileProperties tileData { get; private set; }
     private GameObject tilePrefabRef;
 
     private static GameObject tileRef;
@@ -60,7 +60,7 @@ public class Tile : MonoBehaviour
         var thisTile = TileObj.AddComponent<Tile>();
 
         //thisTile.tilePrefabRef = tileType;
-        thisTile.tileData = new TileData();
+        thisTile.tileData = new TileProperties();
         //thisTile.tilePosition = thisTile.tilePrefabRef.transform.position;
         thisTile.tileData.tilePosition = gridPosition;
         //thisTile.tilePosition = new Vector3(thisTile.tilePosition.x + tilePosition.x, thisTile.tilePosition.y, thisTile.tilePosition.z + tilePosition.y);
@@ -91,9 +91,7 @@ public class Tile : MonoBehaviour
 
         }
         //else
-        //    Debug.LogWarning("Tile prefab not updating...");
-
-       
+        //    Debug.LogWarning("Tile prefab not updating...");   
     }
 
     public void RemoveTile()

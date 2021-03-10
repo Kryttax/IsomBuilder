@@ -89,7 +89,7 @@ public class MouseSelector : MonoBehaviour
             }
             else
             {
-                Debug.Log("Hit with TILE TYPE: " + RoomsManager.instance.GetTileType(gridPoint) + " at position: " + gridPoint);
+                //Debug.Log("Hit with TILE TYPE: " + RoomsManager.instance.GetTileType(gridPoint) + " at position: " + gridPoint);
 
                 if (Input.GetMouseButtonDown(1))
                 {

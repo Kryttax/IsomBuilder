@@ -15,7 +15,7 @@ public class RoomsManager : MonoBehaviour
     private List<Vector2> occupiedTiles;
 
     public GameObject emptyTilePrefab;
-    public GameObject[] roomTypes;
+    public RoomData[] roomTypes;
 
     private void Awake()
     {
@@ -37,32 +37,51 @@ public class RoomsManager : MonoBehaviour
             }
         }
 
-        Serializer.Config.Set("Total Rooms", rooms.Count);
-        Serializer.Config.Set("Empty Tiles", emptyTiles.Count);
-        Serializer.Config.Set("Occupied Tiles", occupiedTiles.Count);
-        Serializer.Config.Set("Vector2 Test", new Vector2(0, 50));
+        List<Vector2> test = new List<Vector2>();
+        test.Add(new Vector2(0, 1));
+        test.Add(new Vector2(0, 2));
+        test.Add(new Vector2(0, 10));
+        //Serializer.Config.ResetToDefaultData();
+        //Serializer.Config.Set("Total Rooms", rooms.Count);
+        //Serializer.Config.Set("Empty Tiles", emptyTiles.Count);
+        //Serializer.Config.Set("Occupied Tiles", occupiedTiles.Count);
+        //Serializer.Config.Set("Vector2 Test", test);
         //int exampleValue = Serializer.Config.Get<int>("Empty Tiles");
         int size = Serializer.Config.Get<int>("Total Rooms");
 
-        if(size > 0)
+        Debug.Log("Rooms to Load: " + size);
+
+        if (size > 0)
         {
             for(int i = 0; i < size; ++i)
             {
-                Room newRoom = Instantiate(roomTypes[0]).GetComponent<Room>();
-                newRoom = 
-                rooms = Serializer.Config.Get<List<Room>("Rooms");
+                Debug.Log("Room Property Tile(" + i + ") " + Serializer.Config.Get<List<TileProperties>>("RedRoom").Count);
+                List<TileProperties> loadedRoomTiles = Serializer.Config.Get<List<TileProperties>>("RedRoom");
+
+                Room loadedRoom = RoomsManager.BuildRoomOfType(roomTypes[i], loadedRoomTiles);
+                loadedRoom.LoadRoom();
+                loadedRoom.UpdateRoomTiles();
+                rooms.Add(loadedRoom);
             }
         }
-        //Debug.LogWarning("Config FILE Empty tiles Value: " + exampleValue);
     }
+
+    public static Room BuildRoomOfType(RoomData type, List<TileProperties> properties = null)
+    {
+        return Room.CreateRoom(type, properties);
+    }
+
+    //public static Room BuildRoomOfType(RoomData type, RoomProperties properties = null)
+    //{
+    //    return Room.CreateRoom(type, properties);
+    //}
 
     public void StartRoomConstruction(int roomType = 0)
     {
         //GameObject newRoom = Object.Instantiate(new GameObject());
         //Room addRoom = newRoom.AddComponent<Room>() as Room;
         //currentRoom = addRoom;
-        currentRoom
-        currentRoom = Instantiate(roomTypes[roomType]).GetComponent<Room>();
+        currentRoom = Room.CreateRoom(roomTypes[roomType]);
     }
 
     public bool StartRoomDestruction()
@@ -73,15 +92,15 @@ public class RoomsManager : MonoBehaviour
         return currentRoom != null;
     }
 
-    public void AddTileToRoom(Vector3 tilePos)
-    {
-        currentRoom.AddTile(new Vector2(tilePos.x, tilePos.z));
-    }
+    //public void AddTileToRoom(Vector3 tilePos)
+    //{
+    //    currentRoom.AddTile(new Vector2(tilePos.x, tilePos.z));
+    //}
 
-    public void RemoveTileFromRoom(Vector3 tilePos)
-    {
-        currentRoom.RemoveTile(new Vector2(tilePos.x, tilePos.z));
-    }
+    //public void RemoveTileFromRoom(Vector3 tilePos)
+    //{
+    //    currentRoom.RemoveTile(new Vector2(tilePos.x, tilePos.z));
+    //}
 
     public void AddEmptyTile(Vector2 position)
     {
@@ -146,7 +165,7 @@ public class RoomsManager : MonoBehaviour
             currentRoom.AddTile(new Vector2(points[i].x, points[i].y));
         }
 
-        currentRoom.FillRoomWithTiles();
+        currentRoom.CreateRoomTiles();
         //FinishRoomConstruction();
     }
 
@@ -162,7 +181,7 @@ public class RoomsManager : MonoBehaviour
             currentRoom.RemoveTile(new Vector2(points[i].x, points[i].y));
         }
 
-        currentRoom.ClearRoomWithTiles();
+        currentRoom.ClearRoomTiles();
     }
 
     public RoomData.ROOM_TILE_TYPE GetTileType(Vector2 tilePosition)
@@ -191,8 +210,10 @@ public class RoomsManager : MonoBehaviour
 
     public void FinishRoomConstruction()
     {
-        currentRoom.FillRoomWithTiles();
+        //currentRoom.CreateRoomTiles();
         rooms.Add(currentRoom);
+        Serializer.Config.Set("Total Rooms", rooms.Count);
+        currentRoom.SyncRoom();
         currentRoom = null;
     }
 }
