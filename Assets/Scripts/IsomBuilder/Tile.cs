@@ -34,8 +34,6 @@ namespace IsomBuilder
 [Serializable]
 public class Tile : MonoBehaviour
 {
-
-
     public TileProperties tileData { get; private set; }
 
     private GameObject tilePrefabRef;

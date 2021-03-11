@@ -3,10 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using IsomBuilder;
 
+[System.Serializable]
+public class MapProperties
+{
+    public Vector2 mapSize { get; set; }
+    [SUCC.SaveThis] public List<TileProperties> tilesProperties;            //Map TileData (Serialization)
+
+    public MapProperties(Vector2 mSize, List<TileProperties> tProperties = null)
+    {
+        mapSize = new Vector2(9, 9);
+
+        if (tProperties != null)
+            tilesProperties = new List<TileProperties>(tProperties);
+        else tilesProperties = new List<TileProperties>();     
+    }
+}
+
+
 public class RoomsManager : MonoBehaviour
 {
     public static RoomsManager instance = null;
-
 
     private List<Room> rooms;
     private Room currentRoom;
@@ -14,8 +30,12 @@ public class RoomsManager : MonoBehaviour
     private List<Tile> emptyTiles;
     private List<Vector2> occupiedTiles;
 
+    private List<Tile> mapTiles;
+
     public GameObject emptyTilePrefab;
     public RoomData[] roomTypes;
+
+    private MapProperties mapProperties;
 
     private void Awake()
     {
@@ -28,83 +48,71 @@ public class RoomsManager : MonoBehaviour
         rooms = new List<Room>();
         emptyTiles = new List<Tile>();
         occupiedTiles = new List<Vector2>();
+        mapTiles = new List<Tile>();
 
-        for (int i = 0; i < 9; ++i)
+        List<TileProperties> mTileProperties = Serializer.MapConfig.Get<List<TileProperties>>("Map");
+
+        if(mTileProperties == null)
+            mapProperties = new MapProperties(new Vector2(9, 9));
+        else
+            mapProperties = new MapProperties(Serializer.MapConfig.Get<Vector2>("MapSize"), mTileProperties);
+
+        for (int i = 0; i < mapProperties.mapSize.x; ++i)
         {
-            for (int j = 0; j < 9; ++j)
+            for (int j = 0; j < mapProperties.mapSize.y; ++j)
             {
-                emptyTiles.Add(Tile.CreateTile(new Vector2(i,j), instance.gameObject, emptyTilePrefab));
+                Tile newMapTile = Tile.CreateTile(new Vector2(i, j), instance.gameObject, emptyTilePrefab);
+                mapTiles.Add(newMapTile);
+                emptyTiles.Add(newMapTile);
+                mapProperties.tilesProperties.Add(newMapTile.tileData);
             }
         }
 
-        List<Vector2> test = new List<Vector2>();
-        test.Add(new Vector2(0, 1));
-        test.Add(new Vector2(0, 2));
-        test.Add(new Vector2(0, 10));
+        //BASIC BEHAVIOUR. IN THE FUTURE MUST CHECK IF (NEW GAME/LOADING GAME)
+        if (mTileProperties == null)
+        {
+            Serializer.MapConfig.Set("MapSize", mapProperties.mapSize);
+            Serializer.MapConfig.Set("Map", mapProperties.tilesProperties);
+        }
+       
+
         //Serializer.Config.ResetToDefaultData();
-        //Serializer.Config.Set("Total Rooms", rooms.Count);
-        //Serializer.Config.Set("Empty Tiles", emptyTiles.Count);
-        //Serializer.Config.Set("Occupied Tiles", occupiedTiles.Count);
-        //Serializer.Config.Set("Vector2 Test", test);
-        //int exampleValue = Serializer.Config.Get<int>("Empty Tiles");
+
         int size = Serializer.Config.Get<int>("Total Rooms");
-
-        Debug.Log("Rooms to Load: " + size);
-
         if (size > 0)
         {
             for(int i = 0; i < size; ++i)
             {
-                //Debug.Log("Room Property Tile(" + i + ") " + Serializer.Config.Get<List<TileProperties>>("RedRoom").Count);
-                //List<TileProperties> loadedRoomTiles = Serializer.Config.Get<List<TileProperties>>("RedRoom");
-
-                //List<TileProperties> loadedRoomTiles = Serializer.Config.Get<List<TileProperties>>(roomTypes[i].name);
-
-                //Room loadedRoom = RoomsManager.BuildRoomOfType(roomTypes[i], loadedRoomTiles);
-                //loadedRoom.LoadRoom();
-
-                Room loadedRoom = Room.LoadRoom(roomTypes[i].name, roomTypes[i]);
+                Room loadedRoom = Room.LoadRoom(roomTypes[i].roomID.ToString(), roomTypes[i]);
                 loadedRoom.UpdateRoomTiles();
                 rooms.Add(loadedRoom);
             }
         }
     }
 
-    public static Room BuildRoomOfType(RoomData type, List<TileProperties> properties = null)
+    private RoomData GetRoomID(RoomData.ROOM_ID id)
     {
-        return Room.CreateRoom(type, properties);
+        for (int i = 0; i < roomTypes.Length; ++i)
+            if (roomTypes[i].roomID == id)
+                return roomTypes[i];
+
+        return null;
     }
 
-    //public static Room BuildRoomOfType(RoomData type, RoomProperties properties = null)
-    //{
-    //    return Room.CreateRoom(type, properties);
-    //}
-
-    public void StartRoomConstruction(int roomType = 0)
+    public Room BuildRoomType(RoomData.ROOM_ID id)
     {
-        //GameObject newRoom = Object.Instantiate(new GameObject());
-        //Room addRoom = newRoom.AddComponent<Room>() as Room;
-        //currentRoom = addRoom;
-        currentRoom = Room.CreateRoom(roomTypes[roomType]);
+        return Room.CreateRoom(instance.GetRoomID(id));
+    }
+
+    public void StartRoomConstruction(RoomData.ROOM_ID id = RoomData.ROOM_ID.RED_ROOM)
+    {
+        currentRoom = BuildRoomType(id);
     }
 
     public bool StartRoomDestruction()
     {
-        //GameObject newRoom = Object.Instantiate(new GameObject());
-        //Room addRoom = newRoom.AddComponent<Room>() as Room;
-        //currentRoom = addRoom;
         return currentRoom != null;
     }
-
-    //public void AddTileToRoom(Vector3 tilePos)
-    //{
-    //    currentRoom.AddTile(new Vector2(tilePos.x, tilePos.z));
-    //}
-
-    //public void RemoveTileFromRoom(Vector3 tilePos)
-    //{
-    //    currentRoom.RemoveTile(new Vector2(tilePos.x, tilePos.z));
-    //}
 
     public void AddEmptyTile(Vector2 position)
     {
@@ -154,14 +162,7 @@ public class RoomsManager : MonoBehaviour
     public void FillRoom(Vector2 initPos, Vector2 endPos)
     {
         Vector2[] points;
-        Debug.Log("Init Point: " + initPos + "... End Point: " + endPos);
-
         points = RectangleHelper.GetRectanglePoints(initPos, endPos);
-        //Debug.Log("Rectangle Size: " + points.Length);
-        //for (int i = 0; i < points.Length; ++i)
-        //{
-        //    Debug.Log("Rectangle Point: " + points[i]);
-        //}
 
         for(int i = 0; i < points.Length; ++i)
         {
@@ -179,7 +180,6 @@ public class RoomsManager : MonoBehaviour
 
         for (int i = 0; i < points.Length; ++i)
         {
-            //Debug.Log("Adding Tile from rectangle: " + points[i]);
             currentRoom.RemoveTile(new Vector2(points[i].x, points[i].y));
         }
 
@@ -212,11 +212,9 @@ public class RoomsManager : MonoBehaviour
 
     public void FinishRoomConstruction()
     {
-        //currentRoom.CreateRoomTiles();
         rooms.Add(currentRoom);
         Serializer.Config.Set("Total Rooms", rooms.Count);
-        Room.SaveRoom(roomTypes[0].name, currentRoom.properties);
-        //currentRoom.SaveRoom();
+        Room.SaveRoom(roomTypes[0].roomID.ToString(), currentRoom.properties);
         currentRoom = null;
     }
 }

@@ -45,6 +45,12 @@ public class Room : MonoBehaviour
 
     public static Room CreateRoom(RoomData rData, List<TileProperties> tProperties = null)
     {
+        if (rData == null)
+        {
+            Debug.LogError("Room Data not defined. Cannot Create a new Room.");
+            return null;
+        }
+
         var thisRoom = RoomObj.AddComponent<Room>();
 
         thisRoom.roomData = rData;
@@ -57,18 +63,6 @@ public class Room : MonoBehaviour
     }
 
     //Sets all room's tiles after being loaded from roomProperties with roomData
-    //public void SaveRoom(string fileName, RoomProperties saveData)
-    //{
-    //    Debug.Log("Saving room data... ");
-
-    //    for (int i = 0; i < roomTiles.Count; ++i)
-    //    {
-    //        properties.tilesProperties.Add(roomTiles[i].tileData);
-    //    }
-
-    //    Serializer.Config.Set(roomData.name, properties.tilesProperties);
-    //}
-
     public static void SaveRoom(string fieldName, RoomProperties saveData)
     {
         Debug.Log("Saving room data... ");

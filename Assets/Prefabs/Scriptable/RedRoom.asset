@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 689d3886e22dec846b7a9657021e28d4, type: 3}
   m_Name: RedRoom
   m_EditorClassIdentifier: 
+  roomID: 1
   roomTiles:
   - type: 0
     tile: {fileID: 2018432455069222755, guid: a37117927dd61c546991deebc9a38e30, type: 3}

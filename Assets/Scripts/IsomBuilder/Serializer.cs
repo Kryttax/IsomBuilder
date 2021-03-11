@@ -8,8 +8,8 @@ namespace IsomBuilder
 {
     public static class Serializer
     {
-        public static DataFile Config = new DataFile("RoomConfig");
-
+        public static DataFile MapConfig = new DataFile("MapLimitConfig");
+        public static DataFile Config = new DataFile("RoomsConfig");
     }
 }
 
