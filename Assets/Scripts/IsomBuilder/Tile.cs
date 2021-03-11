@@ -2,44 +2,42 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using IsomBuilder;
 
-
-[Serializable]
-public class TileProperties
+namespace IsomBuilder
 {
-    public TileProperties()
+    [Serializable]
+    public class TileProperties
     {
-        tilePosition = new Vector2();
-        tileType = RoomData.ROOM_TILE_TYPE.EMPTY;
+        //// BUILDABLE | NON_BUILDABLE: BEFORE ROOM CREATION 
+        //// EMPTY | OCCUPIED: AFTER ROOM CREATION (OBJECT/AI LOGIC)
+        //public enum TILE_STATUS { BUILDABLE, NON_BUILDABLE, EMPTY, OCCUPIED }
+
+        //public TILE_STATUS currentStatus { get; private set; }
+        public RoomData.ROOM_TILE_TYPE tileType { get; set; }
+        public Vector2 tilePosition { get; set; }
+
+        public TileProperties()
+        {
+            tilePosition = new Vector2();
+            tileType = RoomData.ROOM_TILE_TYPE.EMPTY;
+        }
+
+        public TileProperties(Vector2 position, RoomData.ROOM_TILE_TYPE type)
+        {
+            tilePosition = position;
+            tileType = type;
+        }
     }
-
-    public TileProperties(RoomData.ROOM_TILE_TYPE type, Vector2 position)
-    {
-        tileType = type;
-        tilePosition = position;
-    }
-
-
-    public RoomData.ROOM_TILE_TYPE tileType { get; set; }
-    public Vector2 tilePosition { get; set; }
 }
-
 
 [Serializable]
 public class Tile : MonoBehaviour
 {
-    //// BUILDABLE | NON_BUILDABLE: BEFORE ROOM CREATION 
-    //// EMPTY | OCCUPIED: AFTER ROOM CREATION (OBJECT/AI LOGIC)
-    //public enum TILE_STATUS { BUILDABLE, NON_BUILDABLE, EMPTY, OCCUPIED }
 
-    //public TILE_STATUS currentStatus { get; private set; }
-
-
-    //public GameObject roomParent { get; private set; }
-    //public RoomData.ROOM_TILE_TYPE tileType { get; private set; }
-    //public Vector2 tilePosition { get; private set; }
 
     public TileProperties tileData { get; private set; }
+
     private GameObject tilePrefabRef;
 
     private static GameObject tileRef;
@@ -59,18 +57,9 @@ public class Tile : MonoBehaviour
     {
         var thisTile = TileObj.AddComponent<Tile>();
 
-        //thisTile.tilePrefabRef = tileType;
-        thisTile.tileData = new TileProperties();
-        //thisTile.tilePosition = thisTile.tilePrefabRef.transform.position;
-        thisTile.tileData.tilePosition = gridPosition;
-        //thisTile.tilePosition = new Vector3(thisTile.tilePosition.x + tilePosition.x, thisTile.tilePosition.y, thisTile.tilePosition.z + tilePosition.y);
-        //thisTile.roomParent = roomParent;
-
-        if (tilePrefab)
-        {
+        thisTile.tileData = new TileProperties(gridPosition, type);
+        if (tilePrefab)       
             thisTile.tilePrefabRef = GameObject.Instantiate(tilePrefab, thisTile.transform);
-            thisTile.tileData.tileType = type;
-        }
 
         thisTile.transform.position = new Vector3(thisTile.tileData.tilePosition.x , 0, thisTile.tileData.tilePosition.y); 
         thisTile.transform.SetParent(roomParent.transform);
@@ -79,19 +68,12 @@ public class Tile : MonoBehaviour
 
     public void UpdateTile(GameObject newTilePrefab, RoomData.ROOM_TILE_TYPE newType)
     {
-        //var thisTile = GetComponent<Tile>();
-        
         if (tilePrefabRef && newType != tileData.tileType)
         {
-            //Debug.LogWarning("Destroying previous tile prefab and updating...");
             Destroy(tilePrefabRef.gameObject);
-
             tilePrefabRef = GameObject.Instantiate(newTilePrefab, this.transform);
             tileData.tileType = newType;
-
         }
-        //else
-        //    Debug.LogWarning("Tile prefab not updating...");   
     }
 
     public void RemoveTile()

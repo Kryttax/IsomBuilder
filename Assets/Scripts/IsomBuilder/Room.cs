@@ -3,23 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using IsomBuilder;
-using SUCC;
 
 
-[Serializable]
-public class RoomProperties
+namespace IsomBuilder
 {
-    [SaveThis] public List<TileProperties> tilesProperties;            //Room TileData (Serialization)
-
-    public RoomProperties(List<TileProperties> tProperties = null)
+    [Serializable]
+    public class RoomProperties
     {
+        [SUCC.SaveThis] public List<TileProperties> tilesProperties;            //Room TileData (Serialization)
 
-        if (tProperties != null)
+        public RoomProperties(List<TileProperties> tProperties = null)
         {
-            Debug.Log("tProperties Count: " + tProperties.Count);
-            tilesProperties = new List<TileProperties>(tProperties);
+            if (tProperties != null)
+                tilesProperties = new List<TileProperties>(tProperties);       
+            else tilesProperties = new List<TileProperties>();
         }
-        else tilesProperties = new List<TileProperties>();
     }
 }
 
@@ -27,32 +25,17 @@ public class Room : MonoBehaviour
 {
     private enum COORDINATES { UP, DOWN, LEFT, RIGHT }
 
-    public List<Tile> roomTiles;                    //GameObject References (WIPE BEFORE/AFTER EVERY GAME INIT)
     public RoomData roomData { get; private set; }
-
-    private RoomProperties properties;
-    //private List<Tile> tileGrid;                  //Global Room Tile Reference
-    //private List<Vector2> roomSize;               //Global Room Size
-
-    private List<Vector2> tempRoomSize;             //Resets every time player expands/shrinks currentRoom
-    private List<Vector2> tempRoomRemoval;
-
-
-    //public Room()
-    //{
-    //    properties = new RoomProperties();
-    //    //roomSize = new List<Vector2>();
-    //    //tileGrid = new List<Tile>();
-    //    tempRoomSize = new List<Vector2>();
-    //    tempRoomRemoval = new List<Vector2>();
-    //}
+    public RoomProperties properties { get; private set; }
+    public List<Tile> roomTiles { get; set; }       //GameObject References (WIPE BEFORE/AFTER EVERY GAME INIT)
+    private List<Vector2> tempRoomSize;             //Resets every time player expands currentRoom
+    private List<Vector2> tempRoomRemoval;          //Resets every time player shrinks currentRoom
 
     private static GameObject roomRef;
     public static GameObject RoomObj
     {
         get
         {
-            //if (tileRef == null)
             {
                 roomRef = new GameObject("Room Object");
             }
@@ -64,11 +47,8 @@ public class Room : MonoBehaviour
     {
         var thisRoom = RoomObj.AddComponent<Room>();
 
-   
-        thisRoom.properties = new RoomProperties(tProperties);
-
-
         thisRoom.roomData = rData;
+        thisRoom.properties = new RoomProperties(tProperties);
         thisRoom.roomTiles = new List<Tile>();
         thisRoom.tempRoomSize = new List<Vector2>();
         thisRoom.tempRoomRemoval = new List<Vector2>();
@@ -77,126 +57,89 @@ public class Room : MonoBehaviour
     }
 
     //Sets all room's tiles after being loaded from roomProperties with roomData
-    public void SyncRoom()
+    //public void SaveRoom(string fileName, RoomProperties saveData)
+    //{
+    //    Debug.Log("Saving room data... ");
+
+    //    for (int i = 0; i < roomTiles.Count; ++i)
+    //    {
+    //        properties.tilesProperties.Add(roomTiles[i].tileData);
+    //    }
+
+    //    Serializer.Config.Set(roomData.name, properties.tilesProperties);
+    //}
+
+    public static void SaveRoom(string fieldName, RoomProperties saveData)
     {
-        Debug.Log("Syncing room data... ");
+        Debug.Log("Saving room data... ");
 
-        for (int i = 0; i < roomTiles.Count; ++i)
-        {
-            //Debug.Log("Tile property: " + roomTiles[i].tileData.tileType);
-            properties.tilesProperties.Add(roomTiles[i].tileData);
-        }
+        //for (int i = 0; i < roomTiles.Count; ++i)
+        //{
+        //    saveData.tilesProperties.Add(roomTiles[i].tileData);
+        //}
 
-        Serializer.Config.Set(roomData.name, properties.tilesProperties);
+        Serializer.Config.Set(fieldName, saveData.tilesProperties);
     }
 
-    public void LoadRoom()
+    public static Room LoadRoom(string fieldName, RoomData type)
     {
         Debug.Log("Loading room data... ");
 
-        for (int i = 0; i < properties.tilesProperties.Count; ++i)
-            RoomsManager.instance.RemoveEmptyTile(properties.tilesProperties[i].tilePosition);
+        List<TileProperties> loadedRoomTiles = Serializer.Config.Get<List<TileProperties>>(fieldName);
 
-        for (int i = 0; i < properties.tilesProperties.Count; ++i)
+        Room loadedRoom = Room.CreateRoom(type, loadedRoomTiles);
+
+        for (int i = 0; i < loadedRoomTiles.Count; ++i)
+            RoomsManager.instance.RemoveEmptyTile(loadedRoomTiles[i].tilePosition);
+
+        for (int i = 0; i < loadedRoomTiles.Count; ++i)
         {
-            roomTiles.Add(Tile.CreateTile(properties.tilesProperties[i].tilePosition, this.gameObject, roomData.GetRoomTile(FindNeighbours(properties.tilesProperties[i].tilePosition))));
+            loadedRoom.roomTiles.Add(Tile.CreateTile(loadedRoomTiles[i].tilePosition, loadedRoom.gameObject,
+                loadedRoom.roomData.GetRoomTile(FindNeighbours(loadedRoom.roomTiles, loadedRoomTiles[i].tilePosition))));
         }
 
-        Debug.Log("Room Loading success!");
+        return loadedRoom;
+
+        //for (int i = 0; i < tProperties.Count; ++i)
+        //{
+        //    roomTiles.Add(Tile.CreateTile(properties.tilesProperties[i].tilePosition, this.gameObject, 
+        //        roomData.GetRoomTile(FindNeighbours(roomTiles, properties.tilesProperties[i].tilePosition))));
+        //}
+
     }
-
-    //public void UpdateTile(GameObject newTilePrefab, RoomData.ROOM_TILE_TYPE newType)
-    //{
-    //    //var thisTile = GetComponent<Tile>();
-
-    //    if (tilePrefabRef && newType != tileData.tileType)
-    //    {
-    //        //Debug.LogWarning("Destroying previous tile prefab and updating...");
-    //        Destroy(tilePrefabRef.gameObject);
-
-    //        tilePrefabRef = GameObject.Instantiate(newTilePrefab, this.transform);
-    //        tileData.tileType = newType;
-
-    //    }
-    //    //else
-    //    //    Debug.LogWarning("Tile prefab not updating...");
-
-
-    //}
 
     public void AddTile(Vector2 tilePosition)
     {
-        int index = -1;
-        if(!IsTileInRoom(tilePosition, out index))
-        {
-            //roomSize.Add(tilePosition);
+        if (!IsTileInRoom(roomTiles, tilePosition))
             tempRoomSize.Add(tilePosition);
-        }
+        
     }
 
     public void RemoveTile(Vector2 tilePosition)
     {
-        int index = -1;
-        if(IsTileInRoom(tilePosition, out index))
-        {
+        if(IsTileInRoom(roomTiles, tilePosition))
             tempRoomRemoval.Add(tilePosition);
-            //roomSize.RemoveAt(index);
-        }
     }
 
-    public RoomData.ROOM_TILE_TYPE GetTileTypeInRoom(Vector2 tilePosition)
+    public static RoomData.ROOM_TILE_TYPE GetTileTypeInRoom(List<Tile> rTiles, Vector2 tilePosition)
     {
-        int result = roomTiles.FindIndex(pos => pos.tileData.tilePosition.x == tilePosition.x && pos.tileData.tilePosition.y == tilePosition.y);
+        int result = rTiles.FindIndex(pos => pos.tileData.tilePosition.x == tilePosition.x && pos.tileData.tilePosition.y == tilePosition.y);
 
         if (result == -1)
             return RoomData.ROOM_TILE_TYPE.EMPTY;
         
-        return roomTiles[result].tileData.tileType;
+        return rTiles[result].tileData.tileType;
     }
 
-    public bool IsTileInRoom(Vector2 tilePosition)
+    public static bool IsTileInRoom(List<Tile> rTiles, Vector2 tilePosition)
     {
-        int result = roomTiles.FindIndex(pos => pos.tileData.tilePosition.x == tilePosition.x && pos.tileData.tilePosition.y == tilePosition.y);
+        int result = rTiles.FindIndex(pos => pos.tileData.tilePosition.x == tilePosition.x && pos.tileData.tilePosition.y == tilePosition.y);
 
         if (result == -1)
             return false;
 
         return true;
     }
-
-    private bool IsTileInRoom(Vector2 tilePosition, out int result)
-    {
-        result = roomTiles.FindIndex(pos => pos.tileData.tilePosition.x == tilePosition.x && pos.tileData.tilePosition.y == tilePosition.y);
-
-        if (result == -1)
-            return false;
-
-        return true;
-    }
-
-    //public void FillRoomWithTiles()
-    //{
-    //    //Debug.Log("Room Size: " + roomSize.Count);
-
-    //    for(int i = 0; i < tempRoomSize.Count; ++i)
-    //        RoomsManager.instance.RemoveEmptyTile(tempRoomSize[i]);
-
-    //    for (int i = 0; i < tempRoomSize.Count; ++i)
-    //    {
-    //        //tileGrid[(int)tilePosition.x, (int)tilePosition.y] = new Tile(tilePosition, this);
-    //        //Tile newTile = UnityEngine.Object.Instantiate(new Tile(roomSize[i], this));
-    //        //GameObject newTile = UnityEngine.Object.Instantiate(new GameObject());
-    //        //Tile addTile = newTile.AddComponent<Tile>() as Tile;
-    //        tileGrid.Add(Tile.CreateTile(tempRoomSize[i], this.gameObject, data.GetRoomTile(FindNeighbours(roomSize[i]))));
-
-    //    }
-
-    //    tempRoomSize.Clear();
-
-    //    //for (int i = 0; i < roomSize.Count; ++i)
-    //    //    tileGrid[i].UpdateTile(data.GetRoomTile(Room.FindNeighbours(roomSize[i])));
-    //}
-
 
     public void CreateRoomTiles()
     {
@@ -205,7 +148,9 @@ public class Room : MonoBehaviour
 
         for (int i = 0; i < tempRoomSize.Count; ++i)
         {
-            roomTiles.Add(Tile.CreateTile(tempRoomSize[i], this.gameObject, roomData.GetRoomTile(FindNeighbours(tempRoomSize[i]))));
+            Tile newTile = Tile.CreateTile(tempRoomSize[i], this.gameObject, roomData.GetRoomTile(FindNeighbours(roomTiles, tempRoomSize[i])));
+            roomTiles.Add(newTile);
+            properties.tilesProperties.Add(newTile.tileData);
         }
 
         tempRoomSize.Clear();
@@ -224,6 +169,7 @@ public class Room : MonoBehaviour
             {
                 roomTiles[tileToDelete].RemoveTile();
                 roomTiles.RemoveAt(tileToDelete);
+                properties.tilesProperties.RemoveAt(tileToDelete);
             }
         }
 
@@ -234,23 +180,22 @@ public class Room : MonoBehaviour
     {
         for (int i = 0; i < roomTiles.Count; ++i)
         {
-            RoomData.ROOM_TILE_TYPE type = FindNeighbours(roomTiles[i].tileData.tilePosition);
+            RoomData.ROOM_TILE_TYPE type = FindNeighbours(roomTiles, roomTiles[i].tileData.tilePosition);
             roomTiles[i].UpdateTile(roomData.GetRoomTile(type), type);
         }
     }
 
-    private RoomData.ROOM_TILE_TYPE FindAdjacentNeighbours(Vector2 centralTile, out int neighbours)
+    private static RoomData.ROOM_TILE_TYPE FindAdjacentNeighbours(List<Tile> rTiles, Vector2 centralTile, out int neighbours)
     {
         List<COORDINATES> tileCoordinates = new List<COORDINATES>();
         neighbours = 0;   // sum
 
-        //char centerTile = roomTiles[x, y]; // Cache center tile
         for (int i = -1; i <= 1; i++)
         {
             for (int j = -1; j <= 1; j++)
             {
                 if ((i == 0 && j == 0) || (i != 0 && j != 0)) continue; // Skip center tile
-                if (IsTileInRoom(new Vector2(centralTile.x + i, centralTile.y + j)))
+                if (IsTileInRoom(rTiles, new Vector2(centralTile.x + i, centralTile.y + j)))
                 {
                     if (i == 0 && j == 1)
                         tileCoordinates.Add(COORDINATES.UP);
@@ -295,22 +240,16 @@ public class Room : MonoBehaviour
         }
 
         return tileType;
-
     }
 
-    private RoomData.ROOM_TILE_TYPE FindDistantNeighbours(Vector2 centralTile)
+    private static RoomData.ROOM_TILE_TYPE FindDistantNeighbours(List<Tile> rTiles, Vector2 centralTile)
     {
         int adjacentNeighbours = 0;   // sum
-        RoomData.ROOM_TILE_TYPE tileType = FindAdjacentNeighbours(centralTile, out adjacentNeighbours);
+        RoomData.ROOM_TILE_TYPE tileType = FindAdjacentNeighbours(rTiles, centralTile, out adjacentNeighbours);
 
         if (tileType == RoomData.ROOM_TILE_TYPE.EMPTY)
-        {
-            Debug.LogWarning("Empty adjacent neighbours!");
             return tileType;
-        }
-
-        Debug.LogWarning("Adjacent: " + adjacentNeighbours);
-
+        
         int neighbours = 0;
 
         for (int i = -1; i <= 1; i++)
@@ -318,7 +257,7 @@ public class Room : MonoBehaviour
             for (int j = -1; j <= 1; j++)
             {
                 if (i == 0 || j == 0) continue; // Skip center tile
-                if (IsTileInRoom(new Vector2(centralTile.x + i, centralTile.y + j)))
+                if (IsTileInRoom(rTiles, new Vector2(centralTile.x + i, centralTile.y + j)))
                 {
                     neighbours++;
                 }
@@ -399,69 +338,11 @@ public class Room : MonoBehaviour
                 break;
         }
 
-        Debug.Log("Tile Option: " + neighbours);
-
         return tileType;
     }
 
-    private RoomData.ROOM_TILE_TYPE FindNeighbours(Vector2 centralTile)
+    private static RoomData.ROOM_TILE_TYPE FindNeighbours(List<Tile> rTiles, Vector2 centralTile)
     {
-        return FindDistantNeighbours(centralTile);
+        return FindDistantNeighbours(rTiles, centralTile);
     }
-
-    //private RoomData.ROOM_TILE_TYPE FindNeighbours(Vector2 centralTile)
-    //{
-    //    int neighbours = 0;   // sum
-
-    //    //char centerTile = roomTiles[x, y]; // Cache center tile
-    //    for (int i = -1; i <= 1; i++)
-    //    {
-    //        for (int j = -1; j <= 1; j++)
-    //        {
-    //            if (i == 0 && j == 0) continue; // Skip center tile
-    //            if (IsTileInRoom(new Vector2(centralTile.x + i, centralTile.y + j)))
-    //            {
-    //                neighbours++;
-    //            }
-    //        }
-    //    }
-
-    //    RoomData.ROOM_TILE_TYPE tileType;
-
-    //    switch (neighbours)
-    //    {
-    //        case 8:
-    //            tileType = RoomData.ROOM_TILE_TYPE.FLOOR;
-    //            break;
-    //        case 7:
-    //            tileType = RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER;
-    //            break;
-    //        case 6:
-    //            tileType = RoomData.ROOM_TILE_TYPE.SIDE;    //OR TWO-SIDED
-    //            break;
-    //        case 5:
-    //            tileType = RoomData.ROOM_TILE_TYPE.SIDE;    //OR CONVEX
-    //            break;
-    //        case 4:
-    //            tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED;
-    //            break;
-    //        case 3:
-    //            tileType = RoomData.ROOM_TILE_TYPE.CONVEX_CORNER;
-    //            break;
-    //        case 2:
-    //            tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED;
-    //            break;
-    //        case 1:
-    //            tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_CONVEX;
-    //            break;
-    //        default:
-    //            tileType = RoomData.ROOM_TILE_TYPE.EMPTY;
-    //            Debug.LogWarning("This neighbour number: " + neighbours + " is not defined!");
-    //            break;
-    //    }
-
-    //    Debug.Log("Tile Option: " + neighbours);
-
-    //    return tileType;
-    //}
 }

@@ -55,11 +55,15 @@ public class RoomsManager : MonoBehaviour
         {
             for(int i = 0; i < size; ++i)
             {
-                Debug.Log("Room Property Tile(" + i + ") " + Serializer.Config.Get<List<TileProperties>>("RedRoom").Count);
-                List<TileProperties> loadedRoomTiles = Serializer.Config.Get<List<TileProperties>>("RedRoom");
+                //Debug.Log("Room Property Tile(" + i + ") " + Serializer.Config.Get<List<TileProperties>>("RedRoom").Count);
+                //List<TileProperties> loadedRoomTiles = Serializer.Config.Get<List<TileProperties>>("RedRoom");
 
-                Room loadedRoom = RoomsManager.BuildRoomOfType(roomTypes[i], loadedRoomTiles);
-                loadedRoom.LoadRoom();
+                //List<TileProperties> loadedRoomTiles = Serializer.Config.Get<List<TileProperties>>(roomTypes[i].name);
+
+                //Room loadedRoom = RoomsManager.BuildRoomOfType(roomTypes[i], loadedRoomTiles);
+                //loadedRoom.LoadRoom();
+
+                Room loadedRoom = Room.LoadRoom(roomTypes[i].name, roomTypes[i]);
                 loadedRoom.UpdateRoomTiles();
                 rooms.Add(loadedRoom);
             }
@@ -161,12 +165,10 @@ public class RoomsManager : MonoBehaviour
 
         for(int i = 0; i < points.Length; ++i)
         {
-            //Debug.Log("Adding Tile from rectangle: " + points[i]);
             currentRoom.AddTile(new Vector2(points[i].x, points[i].y));
         }
 
         currentRoom.CreateRoomTiles();
-        //FinishRoomConstruction();
     }
 
     public void EmptyRoom(Vector2 initPos, Vector2 endPos)
@@ -188,16 +190,16 @@ public class RoomsManager : MonoBehaviour
     {
         if (currentRoom)
         {
-            RoomData.ROOM_TILE_TYPE type = currentRoom.GetTileTypeInRoom(tilePosition);
+            RoomData.ROOM_TILE_TYPE type = Room.GetTileTypeInRoom(currentRoom.roomTiles, tilePosition);
 
             if (type != RoomData.ROOM_TILE_TYPE.EMPTY)
                 return type;
         }
 
         //Check other rooms
-        Room room = rooms.Find(x => x.IsTileInRoom(tilePosition));
+        Room room = rooms.Find(x => Room.IsTileInRoom(x.roomTiles, tilePosition));
         if (room)
-            return room.GetTileTypeInRoom(tilePosition);
+            return Room.GetTileTypeInRoom(room.roomTiles, tilePosition);
 
         Debug.LogError("Tile not found in RoomsManager!");
         return RoomData.ROOM_TILE_TYPE.EMPTY;
@@ -213,7 +215,8 @@ public class RoomsManager : MonoBehaviour
         //currentRoom.CreateRoomTiles();
         rooms.Add(currentRoom);
         Serializer.Config.Set("Total Rooms", rooms.Count);
-        currentRoom.SyncRoom();
+        Room.SaveRoom(roomTypes[0].name, currentRoom.properties);
+        //currentRoom.SaveRoom();
         currentRoom = null;
     }
 }
