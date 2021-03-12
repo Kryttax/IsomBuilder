@@ -26,7 +26,7 @@ public class RoomsManager : MonoBehaviour
 
     private List<Room> rooms;
     private Room currentRoom;
-
+    private Room schemeRoom;
     private List<Tile> emptyTiles;
     private List<Vector2> occupiedTiles;
 
@@ -79,15 +79,15 @@ public class RoomsManager : MonoBehaviour
         //Serializer.Config.ResetToDefaultData();
 
         int size = Serializer.Config.Get<int>("Total Rooms");
-        if (size > 0)
-        {
-            for(int i = 0; i < size; ++i)
-            {
-                Room loadedRoom = Room.LoadRoom(roomTypes[i].roomID.ToString(), roomTypes[i]);
-                loadedRoom.UpdateRoomTiles();
-                rooms.Add(loadedRoom);
-            }
-        }
+        //if (size > 0)
+        //{
+        //    for(int i = 0; i < size; ++i)
+        //    {
+        //        Room loadedRoom = Room.LoadRoom(roomTypes[i].roomID.ToString(), roomTypes[i]);
+        //        loadedRoom.UpdateRoomTiles();
+        //        rooms.Add(loadedRoom);
+        //    }
+        //}
     }
 
     private RoomData GetRoomID(RoomData.ROOM_ID id)
@@ -104,15 +104,14 @@ public class RoomsManager : MonoBehaviour
         return Room.CreateRoom(instance.GetRoomID(id));
     }
 
-    public void StartRoomConstruction(RoomData.ROOM_ID id = RoomData.ROOM_ID.RED_ROOM)
-    {
-        currentRoom = BuildRoomType(id);
-    }
+    public void StartRoomConstruction(RoomData.ROOM_ID id = RoomData.ROOM_ID.RED_ROOM) => currentRoom = BuildRoomType(id);
 
-    public bool StartRoomDestruction()
-    {
-        return currentRoom != null;
-    }
+    public void StartRoomScheme(RoomData.ROOM_ID id = RoomData.ROOM_ID.RED_ROOM) => schemeRoom = BuildRoomType(id);
+
+    //public bool StartRoomDestruction()
+    //{
+    //    return currentRoom != null;
+    //}
 
     public void AddEmptyTile(Vector2 position)
     {
@@ -159,8 +158,88 @@ public class RoomsManager : MonoBehaviour
         return emptyTiles.FindIndex(x => (int)x.tileData.tilePosition.x == (int)position.x && (int)x.tileData.tilePosition.y == (int)position.y);
     }
 
+    private Vector2 initPointScheme, endPointScheme;
+
+    public void FillRoomScheme(Vector2 initPos, Vector2 endPos)
+    {
+        if(initPointScheme != initPos || endPointScheme != endPos)
+        {
+            initPointScheme = initPos;
+            endPointScheme = endPos;
+
+            //schemeRoom.ClearEntireRoom();
+            //if(currentRoom.roomTiles.Count > 0)
+            //{
+            //    schemeRoom.roomTiles = new List<Tile>(currentRoom.roomTiles);
+            //    schemeRoom.FillRoomTiles();
+            //    for (int i = 0; i < currentRoom.roomTiles.Count; ++i)
+            //        schemeRoom.AddTile(currentRoom.roomTiles[i].tileData.tilePosition);
+            //}
+
+            Vector2[] points;
+            points = RectangleHelper.GetRectanglePoints(initPointScheme, endPointScheme);
+
+            for (int i = 0; i < points.Length; ++i)
+            {
+                if(!Room.IsTileInRoom(schemeRoom.roomTiles, points[i]))
+                    schemeRoom.AddTile(new Vector2(points[i].x, points[i].y));
+            }
+
+            schemeRoom.FillRoomTiles();
+            schemeRoom.UpdateRoomTiles();
+        }       
+    }
+
+    public void ReleaseBuildingParams()
+    {
+        initPointScheme = endPointScheme = Vector2.zero;
+    }
+
+    public void EmptyRoomScheme(Vector2 initPos, Vector2 endPos)
+    {
+        if (initPointScheme != initPos || endPointScheme != endPos)
+        {
+            initPointScheme = initPos;
+            endPointScheme = endPos;
+
+            //schemeRoom.ClearEntireRoom();
+            //if(currentRoom.roomTiles.Count > 0)
+            //{
+            //    schemeRoom.roomTiles = new List<Tile>(currentRoom.roomTiles);
+            //    schemeRoom.FillRoomTiles();
+            //    for (int i = 0; i < currentRoom.roomTiles.Count; ++i)
+            //        schemeRoom.AddTile(currentRoom.roomTiles[i].tileData.tilePosition);
+            //}
+
+            Vector2[] points;
+            points = RectangleHelper.GetRectanglePoints(initPointScheme, endPointScheme);
+
+            for (int i = 0; i < points.Length; ++i)
+            {
+                if (Room.IsTileInRoom(schemeRoom.roomTiles, points[i]))
+                    schemeRoom.RemoveTile(new Vector2(points[i].x, points[i].y));
+            }
+
+            schemeRoom.ClearRoomTiles();
+            schemeRoom.UpdateRoomTiles();
+        }
+    }
+
+    public void BuildRoom()
+    {
+        for (int i = 0; i < schemeRoom.roomTiles.Count; ++i)
+            currentRoom.AddTile(new Vector2(schemeRoom.roomTiles[i].tileData.tilePosition.x, 
+                schemeRoom.roomTiles[i].tileData.tilePosition.y));
+
+        schemeRoom.ClearEntireRoom();
+        schemeRoom.RemoveRoom();
+        currentRoom.FillRoomTiles();
+    }
+
     public void FillRoom(Vector2 initPos, Vector2 endPos)
     {
+        initPointScheme = endPointScheme = Vector2.zero; 
+
         Vector2[] points;
         points = RectangleHelper.GetRectanglePoints(initPos, endPos);
 
@@ -169,8 +248,43 @@ public class RoomsManager : MonoBehaviour
             currentRoom.AddTile(new Vector2(points[i].x, points[i].y));
         }
 
-        currentRoom.CreateRoomTiles();
+        currentRoom.FillRoomTiles();
     }
+
+    public void FillRoom()
+    {
+        initPointScheme = endPointScheme = Vector2.zero;
+
+        //Vector2[] points;
+        //points = RectangleHelper.GetRectanglePoints(initPos, endPos);
+
+        for (int i = 0; i < schemeRoom.roomTiles.Count; ++i)
+        {
+            currentRoom.AddTile(new Vector2(schemeRoom.roomTiles[i].tileData.tilePosition.x, 
+                schemeRoom.roomTiles[i].tileData.tilePosition.y));
+        }
+
+        currentRoom.FillRoomTiles();
+        schemeRoom.ClearEntireRoom();
+    }
+
+    public void EmptyRoom()
+    {
+        initPointScheme = endPointScheme = Vector2.zero;
+
+        //Vector2[] points;
+        //points = RectangleHelper.GetRectanglePoints(initPos, endPos);
+
+        for (int i = 0; i < schemeRoom.roomTiles.Count; ++i)
+        {
+            currentRoom.RemoveTile(new Vector2(schemeRoom.roomTiles[i].tileData.tilePosition.x,
+                schemeRoom.roomTiles[i].tileData.tilePosition.y));
+        }
+
+        currentRoom.ClearRoomTiles();
+        schemeRoom.ClearEntireRoom();
+    }
+
 
     public void EmptyRoom(Vector2 initPos, Vector2 endPos)
     {

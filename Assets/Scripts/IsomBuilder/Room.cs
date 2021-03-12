@@ -27,9 +27,9 @@ public class Room : MonoBehaviour
 
     public RoomData roomData { get; private set; }
     public RoomProperties properties { get; private set; }
-    public List<Tile> roomTiles { get; set; }       //GameObject References (WIPE BEFORE/AFTER EVERY GAME INIT)
-    private List<Vector2> tempRoomSize;             //Resets every time player expands currentRoom
-    private List<Vector2> tempRoomRemoval;          //Resets every time player shrinks currentRoom
+    public List<Tile> roomTiles { get; set; }                   //GameObject References (WIPE BEFORE/AFTER EVERY GAME INIT)
+    private List<Vector2> tempRoomSize;                         //Resets every time player expands currentRoom
+    private List<Vector2> tempRoomRemoval;                      //Resets every time player shrinks currentRoom
 
     private static GameObject roomRef;
     public static GameObject RoomObj
@@ -135,10 +135,10 @@ public class Room : MonoBehaviour
         return true;
     }
 
-    public void CreateRoomTiles()
+    public void FillRoomTiles()
     {
-        for (int i = 0; i < tempRoomSize.Count; ++i)
-            RoomsManager.instance.RemoveEmptyTile(tempRoomSize[i]);
+        //for (int i = 0; i < tempRoomSize.Count; ++i)
+        //    RoomsManager.instance.RemoveEmptyTile(tempRoomSize[i]);
 
         for (int i = 0; i < tempRoomSize.Count; ++i)
         {
@@ -152,8 +152,8 @@ public class Room : MonoBehaviour
 
     public void ClearRoomTiles()
     {
-        for (int i = 0; i < tempRoomRemoval.Count; ++i)
-            RoomsManager.instance.AddEmptyTile(tempRoomRemoval[i]);
+        //for (int i = 0; i < tempRoomRemoval.Count; ++i)
+        //    RoomsManager.instance.AddEmptyTile(tempRoomRemoval[i]);
 
         for (int i = 0; i < tempRoomRemoval.Count; ++i)
         {
@@ -168,6 +168,19 @@ public class Room : MonoBehaviour
         }
 
         tempRoomRemoval.Clear();
+    }
+
+    public void ClearEntireRoom()
+    {
+        for (int i = 0; i < roomTiles.Count; ++i)
+        {
+            //Tile newTile = Tile.CreateTile(tempRoomSize[i], this.gameObject, roomData.GetRoomTile(FindNeighbours(roomTiles, tempRoomSize[i])));
+            roomTiles[i].RemoveTile();
+            //properties.tilesProperties.RemoveAt(i);
+            //roomTiles.RemoveAt(i);
+        }
+        properties.tilesProperties.Clear();
+        roomTiles.Clear();
     }
 
     public void UpdateRoomTiles()
@@ -338,5 +351,17 @@ public class Room : MonoBehaviour
     private static RoomData.ROOM_TILE_TYPE FindNeighbours(List<Tile> rTiles, Vector2 centralTile)
     {
         return FindDistantNeighbours(rTiles, centralTile);
+    }
+
+    public void RemoveRoom()
+    {
+        for(int i = 0; i < roomTiles.Count; ++i)
+        {
+            roomTiles[i].RemoveTile();
+        }
+
+        roomTiles.Clear();
+
+        Destroy(this.gameObject);
     }
 }
