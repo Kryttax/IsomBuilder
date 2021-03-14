@@ -11,7 +11,7 @@ public class MapProperties
 
     public MapProperties(Vector2 mSize, List<TileProperties> tProperties = null)
     {
-        mapSize = new Vector2(9, 9);
+        mapSize = new Vector2(50, 50);
 
         if (tProperties != null)
             tilesProperties = new List<TileProperties>(tProperties);
@@ -188,6 +188,18 @@ public class RoomsManager : MonoBehaviour
             schemeRoom.FillRoomTiles();
             schemeRoom.UpdateRoomTiles();
         }       
+    }
+
+    public bool CheckIfTileAccess(Vector2 tilePosition)
+    {
+        for(int i = 0; i < rooms.Count; ++i)
+        {
+
+            if (Room.IsTileInRoom(rooms[i].roomTiles, tilePosition))
+                return true;
+        }
+
+        return false;
     }
 
     public void ReleaseBuildingParams()
