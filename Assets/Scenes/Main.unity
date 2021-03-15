@@ -246,6 +246,8 @@ MonoBehaviour:
     type: 3}
   roomTypes:
   - {fileID: 11400000, guid: ba9fc542ba6954542aa4d44d77a000d7, type: 2}
+  nodePrefab: {fileID: 4094163036813327402, guid: ffc7e9bcba9b9f34d91ab71243166df2,
+    type: 3}
 --- !u!4 &1174087141
 Transform:
   m_ObjectHideFlags: 0
@@ -254,7 +256,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1174087139}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.0314913, y: -1.4568932, z: 0.47767496}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

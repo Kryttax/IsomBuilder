@@ -65,31 +65,40 @@ public class Tile : MonoBehaviour
 
         thisTile.tileData = new TileProperties(gridPosition, type);
 
+
+
         if (tilePrefab)
         {
-            thisTile.tilePrefabRef = GameObject.Instantiate(tilePrefab, thisTile.transform);
-            thisTile.tilePrefabRef.transform.localEulerAngles = new Vector3(0f, rotationTier * 90f, 0f);
+            thisTile.tilePrefabRef = GameObject.Instantiate(tilePrefab);
+            //thisTile.tilePrefabRef.transform.localEulerAngles = new Vector3(0f, rotationTier * 90f, 0f);
+            thisTile.tilePrefabRef.transform.SetParent(thisTile.transform);
+            //thisTile.tilePrefabRef.transform.localPosition += tilePrefab.transform.position;    //PIVOT
         }
 
         if(sides != null)
         {
-            foreach (Room.COORDINATES coord in sides.Keys)
-                thisTile.AddTileSide(coord, sides[coord], rotationTier);
+            //foreach (Room.COORDINATES coord in sides.Keys)
+            //    thisTile.AddTileSide(coord, sides[coord], rotationTier);
+            thisTile.AddTileSides(sides, rotationTier);
         }
 
-        thisTile.transform.position = new Vector3(thisTile.tileData.tilePosition.x , 0, thisTile.tileData.tilePosition.y);
+        thisTile.transform.position = new Vector3(thisTile.tileData.tilePosition.x, 0, thisTile.tileData.tilePosition.y);
         thisTile.transform.SetParent(roomParent.transform);
+
+
+
         return thisTile;
     }
 
-    public void AddTileSide(Room.COORDINATES coord, GameObject sidePrefab = null, int rotationTier = 0)
-    {
-        if(sidePrefab)
-        {
-            this.tileSidesRef[coord] = GameObject.Instantiate(sidePrefab, this.transform);
-            this.tileSidesRef[coord].transform.localEulerAngles = new Vector3(0f, rotationTier * 90f, 0f);
-        }
-    }
+    //public void AddTileSide(Room.COORDINATES coord, GameObject sidePrefab = null, int rotationTier = 0)
+    //{
+    //    if(sidePrefab)
+    //    {
+    //        this.tileSidesRef[coord] = GameObject.Instantiate(sidePrefab, this.transform);
+    //        this.tileSidesRef[coord].transform.localPosition += sidePrefab.transform.position;
+    //        this.tileSidesRef[coord].transform.localEulerAngles = new Vector3(0f, rotationTier * 90f, 0f);
+    //    }
+    //}
 
     public void AddTileSides(Dictionary<Room.COORDINATES, GameObject> sides, int rotationTier = 0)
     {
@@ -98,6 +107,21 @@ public class Tile : MonoBehaviour
         {
             if(sides[coord] != null)
             {
+                switch (coord)
+                {
+                    case Room.COORDINATES.UP:
+                        rotationTier = 0;
+                        break;
+                    case Room.COORDINATES.DOWN:
+                        rotationTier = 2;
+                        break;
+                    case Room.COORDINATES.LEFT:
+                        rotationTier = 3;
+                        break;
+                    case Room.COORDINATES.RIGHT:
+                        rotationTier = 1;
+                        break;
+                }
                 this.tileSidesRef[coord] = GameObject.Instantiate(sides[coord], this.transform);
                 this.tileSidesRef[coord].transform.localEulerAngles = new Vector3(0f, rotationTier * 90f, 0f);
             }
@@ -121,8 +145,9 @@ public class Tile : MonoBehaviour
         if (tilePrefabRef && newType != tileData.tileType)
         {
             Destroy(tilePrefabRef.gameObject);
+
             tilePrefabRef = GameObject.Instantiate(newTilePrefab, this.transform);
-            this.tilePrefabRef.transform.localEulerAngles = new Vector3(0f, rotationTier * 90f, 0f);
+            //tilePrefabRef.transform.localEulerAngles = new Vector3(0f, rotationTier * 90f, 0f);
             tileData.tileType = newType;
         }
     }

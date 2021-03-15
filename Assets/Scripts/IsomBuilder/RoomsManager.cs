@@ -37,6 +37,9 @@ public class RoomsManager : MonoBehaviour
 
     private MapProperties mapProperties;
 
+    //DEBUG ONLY
+    public GameObject nodePrefab;
+
     private void Awake()
     {
         if (instance == null)
@@ -65,6 +68,8 @@ public class RoomsManager : MonoBehaviour
                 mapTiles.Add(newMapTile);
                 emptyTiles.Add(newMapTile);
                 mapProperties.tilesProperties.Add(newMapTile.tileData);
+
+                Instantiate(nodePrefab, newMapTile.transform);
             }
         }
 

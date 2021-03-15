@@ -292,20 +292,20 @@ public class Room : MonoBehaviour
                 switch (rotTier)
                 {
                     case 0:
-                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
-                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        //sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         break;
                     case 1:
-                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
-                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        //sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         break;
                     case 2:
-                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
-                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        //sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         break;
                     case 3:
-                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
-                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        //sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         break;
                 }
                 break;
@@ -334,12 +334,20 @@ public class Room : MonoBehaviour
                 switch (rotTier)
                 {
                     case 0:
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         break;
                     case 1:
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         break;
                     case 2:
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         break;
                     case 3:
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         break;
                 }
                 break;
@@ -347,12 +355,24 @@ public class Room : MonoBehaviour
                 switch (rotTier)
                 {
                     case 0:
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
                         break;
                     case 1:
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
                         break;
                     case 2:
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
                         break;
                     case 3:
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
                         break;
                 }
                 break;
@@ -377,12 +397,12 @@ public class Room : MonoBehaviour
                 switch (rotTier)
                 {
                     case 0:
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
                         break;
                     case 1:
-                        break;
-                    case 2:
-                        break;
-                    case 3:
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
                         break;
                 }
                 break;
@@ -390,12 +410,24 @@ public class Room : MonoBehaviour
                 switch (rotTier)
                 {
                     case 0:
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         break;
                     case 1:
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         break;
                     case 2:
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         break;
                     case 3:
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         break;
                 }
                 break;
@@ -403,12 +435,24 @@ public class Room : MonoBehaviour
                 switch (rotTier)
                 {
                     case 0:
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         break;
                     case 1:
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         break;
                     case 2:
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         break;
                     case 3:
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONVEX_CORNER);
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         break;
                 }
                 break;
