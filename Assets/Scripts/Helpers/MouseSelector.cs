@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MouseSelector : MonoBehaviour
 {
-    enum BUILD_MODE { NONE, BUILDING }
+    enum BUILD_MODE { NONE, BUILDING, EDITING }
    // Vector3 prevMousePos;
     BUILD_MODE buildingMode = BUILD_MODE.NONE;
     bool destroyMode = false;
@@ -18,11 +18,14 @@ public class MouseSelector : MonoBehaviour
     private UnityEngine.UI.Button finishRoomButton;
     [SerializeField]
     private UnityEngine.UI.Button buildRoomButton;
+    [SerializeField]
+    private UnityEngine.UI.Button editRoomButton;
 
     private void Awake()
     {
         finishRoomButton.onClick.AddListener(() => { OnFinishRoomButton(); });
         buildRoomButton.onClick.AddListener(() => { OnBuildRoomButton(); });
+        editRoomButton.onClick.AddListener(() => { OnEditRoomButton(); });
     }
 
     private void Update()
@@ -55,10 +58,22 @@ public class MouseSelector : MonoBehaviour
                     //    buildingMode = BUILD_MODE.BUILDING;
                     //}
                     //RoomsManager.instance.AddTileToRoom(gridPoint);
-                    if (buildingMode == BUILD_MODE.BUILDING)
-                    {
 
-                        orgBoxPos = gridPoint;
+                    switch (buildingMode)
+                    {
+                        case BUILD_MODE.NONE:
+                            break;
+                        case BUILD_MODE.BUILDING:
+                            orgBoxPos = gridPoint;
+                            break;
+                        case BUILD_MODE.EDITING:
+                            if (RoomsManager.instance.GetOccupiedTileAt(gridPoint) != -1 &&
+                                RoomsManager.instance.AssignRoomEdit(gridPoint))   //Double Check
+                            {
+                                buildingMode = BUILD_MODE.BUILDING;
+                                orgBoxPos = gridPoint;
+                            }
+                            break;
                     }
                 }
 
@@ -91,7 +106,7 @@ public class MouseSelector : MonoBehaviour
                     orgBoxPos = Vector2.zero;
                     endBoxPos = Vector2.zero;
 
-                }          
+                }
 
             }
             //else
@@ -102,15 +117,33 @@ public class MouseSelector : MonoBehaviour
                 {
                     Debug.Log("RIGHT Mouse Pressed!");
                     //prevMousePos = gridPoint;
-                    if (buildingMode == BUILD_MODE.BUILDING)
-                    {
-                        //RoomsManager.instance.StartRoomDestruction();
-                        //buildingMode = BUILD_MODE.DESTROYING;
+                    //if (buildingMode == BUILD_MODE.BUILDING)
+                    //{
+                    //    //RoomsManager.instance.StartRoomDestruction();
+                    //    //buildingMode = BUILD_MODE.DESTROYING;
 
-                        orgBoxPos = gridPoint;
-                    }
+                    //    orgBoxPos = gridPoint;
+                    //}
                     //RoomsManager.instance.AddTileToRoom(gridPoint);
-                    
+
+                    switch (buildingMode)
+                    {
+                        case BUILD_MODE.NONE:
+                            break;
+                        case BUILD_MODE.BUILDING:
+                            orgBoxPos = gridPoint;
+                            break;
+                        case BUILD_MODE.EDITING:
+                            //if (RoomsManager.instance.GetOccupiedTileAt(gridPoint) != -1 &&
+                            //    RoomsManager.instance.AssignRoomEdit(gridPoint))   //Double Check
+                            if(RoomsManager.instance.AssignRoomEdit(gridPoint))
+                            {
+                                buildingMode = BUILD_MODE.BUILDING;
+                                orgBoxPos = gridPoint;
+                            }
+                            break;
+                    }
+
                 }
 
                 if (Input.GetMouseButton(1))
@@ -149,10 +182,6 @@ public class MouseSelector : MonoBehaviour
             //        orgBoxPos = Vector2.zero;
             //        endBoxPos = Vector2.zero;
             //}
-
-
-
-
         }
     }
 
@@ -175,5 +204,15 @@ public class MouseSelector : MonoBehaviour
             RoomsManager.instance.StartRoomConstruction();
             RoomsManager.instance.StartRoomScheme();
         }
+    }
+
+    public void OnEditRoomButton()
+    {
+        if (buildingMode == BUILD_MODE.BUILDING)
+        {
+            OnFinishRoomButton();
+        }
+
+        buildingMode = BUILD_MODE.EDITING;
     }
 }

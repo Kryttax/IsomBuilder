@@ -211,28 +211,35 @@ public class Room : MonoBehaviour
             RoomData.ROOM_TILE_TYPE tType = FindNeighbours(roomTiles, roomTiles[i].tileData.tilePosition, out tNeighbours, out tCoord);
             int rotTier = Room.GetRotationTileTier(tType, tCoord);
 
-            //if(tType == RoomData.ROOM_TILE_TYPE.SIDE)
-            //{
-            //    foreach (Room.COORDINATES coord in tCoord)
-            //        if (RoomsManager.instance.CheckIfTileAccess(GetTileCoordinatePosition(roomTiles[i].tileData.tilePosition, coord)))
-            //        {
-            //            tType = RoomData.ROOM_TILE_TYPE.ACCESS_SIDE;
-            //            break;
-            //        }
-            //}
+            //UNCOMMENT THIS FOR ACCESS TILES 
+            //CheckRoomContext(ref tType, tCoord, roomTiles[i].tileData.tilePosition);
 
-            //else if (tType == RoomData.ROOM_TILE_TYPE.CONVEX_CORNER)
-            //{
-            //    foreach (Room.COORDINATES coord in tCoord)
-            //        if (RoomsManager.instance.CheckIfTileAccess(GetTileCoordinatePosition(roomTiles[i].tileData.tilePosition, coord)))
-            //        {
-            //            tType = RoomData.ROOM_TILE_TYPE.ACCESS_CORNER;
-            //            break;
-            //        }
-            //}
 
             roomTiles[i].UpdateTileFloor(roomData.GetRoomFloor(tType), tType, rotTier);
             roomTiles[i].AddTileSides(GetTileSides(this.roomData, tType, rotTier), rotTier);
+        }
+    }
+
+    private void CheckRoomContext(ref RoomData.ROOM_TILE_TYPE tType, List<COORDINATES> tCoord, Vector2 tilePos)
+    {
+        if (tType == RoomData.ROOM_TILE_TYPE.SIDE)
+        {
+            foreach (Room.COORDINATES coord in tCoord)
+                if (RoomsManager.instance.CheckIfTileAccess(GetTileCoordinatePosition(tilePos, coord)))
+                {
+                    tType = RoomData.ROOM_TILE_TYPE.ACCESS_SIDE;
+                    break;
+                }
+        }
+
+        else if (tType == RoomData.ROOM_TILE_TYPE.CONVEX_CORNER)
+        {
+            foreach (Room.COORDINATES coord in tCoord)
+                if (RoomsManager.instance.CheckIfTileAccess(GetTileCoordinatePosition(tilePos, coord)))
+                {
+                    tType = RoomData.ROOM_TILE_TYPE.ACCESS_CORNER;
+                    break;
+                }
         }
     }
 

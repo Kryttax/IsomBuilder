@@ -20,6 +20,9 @@ MonoBehaviour:
   - type: 1
     prefab: {fileID: 8486541912698564371, guid: 78833a0c754cfb349a8ae4c75b83019e,
       type: 3}
+  - type: 2
+    prefab: {fileID: 8486541912698564371, guid: 78833a0c754cfb349a8ae4c75b83019e,
+      type: 3}
   roomTiles:
   - type: 0
     floor: {fileID: 8486541912698564371, guid: 78833a0c754cfb349a8ae4c75b83019e, type: 3}

@@ -118,6 +118,23 @@ public class RoomsManager : MonoBehaviour
     //    return currentRoom != null;
     //}
 
+    public bool AssignRoomEdit(Vector2 roomTilePosition)
+    {
+        for(int i = 0; i < rooms.Count; ++i)
+        {
+            Debug.Log("Checking room: " + rooms[i].name + " in position: " + roomTilePosition);
+            if (Room.IsTileInRoom(rooms[i].roomTiles, roomTilePosition))
+            {
+                Debug.Log("Room found!");
+                schemeRoom = rooms[i];
+                return true;
+            }
+        }
+
+        Debug.Log("Room NOT found.");
+        return false;
+    }
+
     public void AddEmptyTile(Vector2 position)
     {
         int index = GetOccupiedTileAt(position);
@@ -186,8 +203,21 @@ public class RoomsManager : MonoBehaviour
 
             for (int i = 0; i < points.Length; ++i)
             {
-                if(!Room.IsTileInRoom(schemeRoom.roomTiles, points[i]))
-                    schemeRoom.AddTile(new Vector2(points[i].x, points[i].y));
+                if (!Room.IsTileInRoom(schemeRoom.roomTiles, points[i]))
+                {
+                    bool bAddTile = true;
+                    for (int roomCount = 0; roomCount < rooms.Count; ++roomCount)
+                        if (Room.IsTileInRoom(rooms[roomCount].roomTiles, points[i]))
+                        {
+                            bAddTile = false;
+                            break;
+                        }
+
+                    if(bAddTile)
+                        schemeRoom.AddTile(new Vector2(points[i].x, points[i].y));
+                }
+                //if(!Room.IsTileInRoom(schemeRoom.roomTiles, points[i]))
+                //    schemeRoom.AddTile(new Vector2(points[i].x, points[i].y));
             }
 
             schemeRoom.FillRoomTiles();
@@ -199,13 +229,14 @@ public class RoomsManager : MonoBehaviour
     {
         for(int i = 0; i < rooms.Count; ++i)
         {
-
             if (Room.IsTileInRoom(rooms[i].roomTiles, tilePosition))
                 return true;
         }
 
         return false;
     }
+
+
 
     public void ReleaseBuildingParams()
     {
