@@ -21,7 +21,12 @@ MonoBehaviour:
     prefab: {fileID: 8486541912698564371, guid: 78833a0c754cfb349a8ae4c75b83019e,
       type: 3}
   - type: 2
-    prefab: {fileID: 8486541912698564371, guid: 78833a0c754cfb349a8ae4c75b83019e,
+    prefab: {fileID: 841781821782393604, guid: 69deda7765947f34e92a06ce5bee13e0, type: 3}
+  - type: 3
+    prefab: {fileID: 2820717613318278620, guid: e351e632c514acf4c8e02c9b2accfb4c,
+      type: 3}
+  - type: 4
+    prefab: {fileID: 6531482017565000469, guid: aa1aafcfb635fa3498898ffb115afbd0,
       type: 3}
   roomTiles:
   - type: 0

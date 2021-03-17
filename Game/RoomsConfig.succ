@@ -1,475 +1,250 @@
-Total Rooms: 2
+Total Rooms: 1
 RED_ROOM:
     -
         tileType: CONVEX_CORNER
         tilePosition:
-            x: 9
+            x: 1
+            y: 8
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 1
+            y: 7
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 2
+            y: 8
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 2
+            y: 7
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 2
+            y: 6
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 1
+            y: 6
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 3
+            y: 8
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 3
+            y: 7
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 3
+            y: 6
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 4
+            y: 8
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 4
+            y: 7
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 4
+            y: 6
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 4
+            y: 5
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 3
+            y: 5
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 2
+            y: 5
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 1
+            y: 5
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 4
+            y: 4
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 3
+            y: 4
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 2
+            y: 4
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 1
+            y: 4
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 5
+            y: 8
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 5
+            y: 7
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 5
+            y: 6
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 5
+            y: 5
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 5
+            y: 4
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 6
+            y: 8
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 6
+            y: 7
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 6
+            y: 6
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 6
+            y: 5
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 6
+            y: 4
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 7
+            y: 8
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 7
+            y: 7
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 7
+            y: 6
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 7
+            y: 5
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 7
+            y: 4
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 7
+            y: 3
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 6
+            y: 3
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 5
+            y: 3
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 4
+            y: 3
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 3
+            y: 3
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 2
             y: 3
     -
         tileType: SIDE
         tilePosition:
-            x: 10
+            x: 1
             y: 3
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 10
-            y: 2
-    -
-        tileType: CONCAVE_CORNER
-        tilePosition:
-            x: 9
-            y: 2
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 11
-            y: 3
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 11
-            y: 2
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 12
-            y: 3
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 12
-            y: 2
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 13
-            y: 3
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 13
-            y: 2
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 13
-            y: 1
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 12
-            y: 1
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 11
-            y: 1
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 10
-            y: 1
-    -
-        tileType: CONCAVE_CORNER
-        tilePosition:
-            x: 9
-            y: 1
-    -
-        tileType: CONCAVE_CORNER
-        tilePosition:
-            x: 14
-            y: 3
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 14
-            y: 2
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 14
-            y: 1
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 15
-            y: 3
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 15
-            y: 2
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 15
-            y: 1
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 16
-            y: 3
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 16
-            y: 2
-    -
-        tileType: CONCAVE_CORNER
-        tilePosition:
-            x: 16
-            y: 1
     -
         tileType: CONVEX_CORNER
         tilePosition:
-            x: 16
-            y: 0
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 15
-            y: 0
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 14
-            y: 0
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 13
-            y: 0
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 12
-            y: 0
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 11
-            y: 0
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 10
-            y: 0
-    -
-        tileType: CONVEX_CORNER
-        tilePosition:
-            x: 9
-            y: 0
-    -
-        tileType: CONVEX_CORNER
-        tilePosition:
-            x: 20
-            y: 10
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 20
-            y: 9
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 19
-            y: 10
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 19
-            y: 9
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 18
-            y: 10
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 18
-            y: 9
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 20
+            x: 8
             y: 8
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 19
-            y: 8
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 18
-            y: 8
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 20
-            y: 7
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 19
-            y: 7
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 18
-            y: 7
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 17
-            y: 10
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 17
-            y: 9
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 17
-            y: 8
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 17
-            y: 7
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 16
-            y: 10
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 16
-            y: 9
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 16
-            y: 8
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 16
-            y: 7
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 20
-            y: 6
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 20
-            y: 5
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 19
-            y: 6
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 19
-            y: 5
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 18
-            y: 6
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 18
-            y: 5
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 17
-            y: 6
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 17
-            y: 5
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 16
-            y: 6
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 16
-            y: 5
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 15
-            y: 10
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 15
-            y: 9
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 15
-            y: 8
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 15
-            y: 7
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 15
-            y: 6
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 15
-            y: 5
-    -
-        tileType: CONVEX_CORNER
-        tilePosition:
-            x: 14
-            y: 10
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 14
-            y: 9
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 14
-            y: 8
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 14
-            y: 7
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 14
-            y: 6
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 14
-            y: 5
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 20
-            y: 4
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 20
-            y: 3
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 19
-            y: 4
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 19
-            y: 3
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 18
-            y: 4
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 18
-            y: 3
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 17
-            y: 4
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 17
-            y: 3
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 16
-            y: 4
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 15
-            y: 4
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 14
-            y: 4
-    -
-        tileType: CONVEX_CORNER
-        tilePosition:
-            x: 20
-            y: 2
-    -
-        tileType: CONCAVE_CORNER
-        tilePosition:
-            x: 19
-            y: 2
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 18
-            y: 2
-    -
-        tileType: FLOOR
-        tilePosition:
-            x: 17
-            y: 2
-    -
-        tileType: CONVEX_CORNER
-        tilePosition:
-            x: 19
-            y: 1
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 18
-            y: 1
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 17
-            y: 1
     -
         tileType: SIDE
         tilePosition:
             x: 8
-            y: 2
+            y: 7
+    -
+        tileType: CONCAVE_CORNER
+        tilePosition:
+            x: 8
+            y: 6
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 8
+            y: 5
+    -
+        tileType: CONCAVE_CORNER
+        tilePosition:
+            x: 8
+            y: 4
     -
         tileType: SIDE
         tilePosition:
             x: 8
-            y: 1
+            y: 3
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 8
+            y: 2
     -
         tileType: SIDE
         tilePosition:
@@ -478,18 +253,8 @@ RED_ROOM:
     -
         tileType: SIDE
         tilePosition:
-            x: 7
-            y: 1
-    -
-        tileType: SIDE
-        tilePosition:
             x: 6
             y: 2
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 6
-            y: 1
     -
         tileType: SIDE
         tilePosition:
@@ -498,80 +263,95 @@ RED_ROOM:
     -
         tileType: SIDE
         tilePosition:
-            x: 5
-            y: 1
+            x: 4
+            y: 2
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 3
+            y: 2
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 2
+            y: 2
     -
         tileType: CONVEX_CORNER
         tilePosition:
-            x: 3
+            x: 1
+            y: 2
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 10
             y: 6
     -
-        tileType: SIDE
+        tileType: FLOOR
         tilePosition:
-            x: 3
+            x: 10
             y: 5
-    -
-        tileType: CONVEX_CORNER
-        tilePosition:
-            x: 4
-            y: 6
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 4
-            y: 5
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 4
-            y: 4
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 3
-            y: 4
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 4
-            y: 3
-    -
-        tileType: SIDE
-        tilePosition:
-            x: 3
-            y: 3
     -
         tileType: CONCAVE_CORNER
         tilePosition:
-            x: 4
-            y: 2
+            x: 10
+            y: 4
     -
         tileType: SIDE
         tilePosition:
-            x: 3
-            y: 2
+            x: 9
+            y: 6
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 9
+            y: 5
     -
         tileType: SIDE
         tilePosition:
-            x: 4
+            x: 9
+            y: 4
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 10
+            y: 3
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 10
+            y: 2
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 11
+            y: 6
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 11
+            y: 5
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 11
+            y: 4
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 11
+            y: 3
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 11
+            y: 2
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 11
             y: 1
     -
         tileType: CONVEX_CORNER
         tilePosition:
-            x: 3
-            y: 1
-    -
-        tileType: DOUBLE_CONVEX
-        tilePosition:
-            x: 23
-            y: 2
-    -
-        tileType: CONVEX_CORNER
-        tilePosition:
-            x: 22
-            y: 2
-    -
-        tileType: DOUBLE_CONVEX
-        tilePosition:
-            x: 22
+            x: 10
             y: 1

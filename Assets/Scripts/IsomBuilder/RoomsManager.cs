@@ -225,17 +225,39 @@ public class RoomsManager : MonoBehaviour
         }       
     }
 
-    public bool CheckIfTileAccess(Vector2 tilePosition)
+    //OMIT CURENT ROOM
+    public bool CheckIfTileAccess(Vector2 localTile, Vector2 tilePosition, Room roomToOmit)
     {
-        for(int i = 0; i < rooms.Count; ++i)
+        Tile accessTile = null;
+
+        for (int i = 0; i < rooms.Count; ++i)
         {
-            if (Room.IsTileInRoom(rooms[i].roomTiles, tilePosition))
+            if (rooms[i] != roomToOmit && Room.IsTileInRoom(rooms[i].roomTiles, tilePosition, out accessTile))
+            {
+                Room.COORDINATES coord = Room.GetTileCoordinate(localTile, accessTile.tileData.tilePosition);
+                rooms[i].UpdateRoomTile(accessTile, coord);
                 return true;
+            }
         }
 
         return false;
     }
 
+    public bool CheckIfLocalTileAccess(Vector2 tilePosition)
+    {
+        Tile accessTile = null;
+
+        for (int i = 0; i < rooms.Count; ++i)
+        {
+            if (Room.IsTileInRoom(rooms[i].roomTiles, tilePosition, out accessTile))
+            {
+                rooms[i].UpdateTileContext(accessTile);
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 
     public void ReleaseBuildingParams()
