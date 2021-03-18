@@ -84,11 +84,11 @@ public class Room : MonoBehaviour
         Room loadedRoom = Room.CreateRoom(type, loadedRoomTiles);
 
         for (int i = 0; i < loadedRoomTiles.Count; ++i)
-            RoomsManager.instance.RemoveEmptyTile(loadedRoomTiles[i].tilePosition);
+            RoomsManager.instance.RemoveRock(loadedRoomTiles[i].tilePosition);
 
         for (int i = 0; i < loadedRoomTiles.Count; ++i)
         {
-            Tile newTile = CreateRoomTile(loadedRoomTiles[i].tilePosition, loadedRoom.gameObject, loadedRoom.roomData, loadedRoom.roomTiles);
+            Tile newTile = GenerateRoomTile(loadedRoomTiles[i].tilePosition, loadedRoom.gameObject, loadedRoom.roomData, loadedRoom.roomTiles);
             //loadedRoom.roomTiles.Add(Tile.CreateTile(loadedRoomTiles[i].tilePosition, loadedRoom.gameObject,
             //    loadedRoom.roomData.GetRoomTile(FindNeighbours(loadedRoom.roomTiles, loadedRoomTiles[i].tilePosition))));
             loadedRoom.roomTiles.Add(newTile);
@@ -173,7 +173,7 @@ public class Room : MonoBehaviour
             //RoomData.ROOM_TILE_TYPE tType = FindNeighbours(roomTiles, tempRoomSize[i], out tNeighbours, out tCoord);
             //int rotTier = Room.GetRotationTileTier(tType, tCoord);
             //Tile newTile = Tile.CreateTile(tempRoomSize[i], this.gameObject, roomData.GetRoomTile(tType), tType, rotTier);
-            Tile newTile = CreateRoomTile(tempRoomSize[i], this.gameObject, roomData, roomTiles);
+            Tile newTile = GenerateRoomTile(tempRoomSize[i], this.gameObject, roomData, roomTiles);
             roomTiles.Add(newTile);
             properties.tilesProperties.Add(newTile.tileData);
         }
@@ -192,7 +192,10 @@ public class Room : MonoBehaviour
 
             if(tileToDelete != -1)
             {
-                roomTiles[tileToDelete].RemoveTile();
+                if (roomTiles[tileToDelete].tileData.isAccess)
+                    RoomsManager.instance.PropagateChangesToAccess(roomTiles[tileToDelete].tileData.tilePosition);
+                RoomsManager.instance.GenerateEmptyRock(roomTiles[tileToDelete].tileData.tilePosition);
+                //roomTiles[tileToDelete].RemoveTile();
                 roomTiles.RemoveAt(tileToDelete);
                 properties.tilesProperties.RemoveAt(tileToDelete);
             }
@@ -228,8 +231,21 @@ public class Room : MonoBehaviour
 
             //UNCOMMENT THIS FOR ACCESS TILES 
             UpdateTileContext(roomTiles[i]);
-            //CheckRoomContext(roomTiles[i], GetAdjacentCoordinates());
         }
+    }
+
+    public void UpdateRoomTile(Tile tile)
+    {
+        int tNeighbours = 0;
+        List<COORDINATES> tCoord = new List<COORDINATES>();
+        RoomData.ROOM_TILE_TYPE tType = FindNeighbours(roomTiles, tile.tileData.tilePosition, out tNeighbours, out tCoord);
+        int rotTier = Room.GetRotationTileTier(tType, tCoord);
+
+        tile.UpdateTileFloor(roomData.GetRoomFloor(tType), tType, rotTier);
+        tile.AddTileSides(GetTileSides(this.roomData, tType, rotTier), rotTier);
+
+        //UNCOMMENT THIS FOR ACCESS TILES 
+        //UpdateTileContext(tile);
     }
 
     public void UpdateRoomTile(Tile tile, COORDINATES coord)
@@ -237,6 +253,8 @@ public class Room : MonoBehaviour
         roomData.GetRoomWall(tile.tileData.tileType);
         tile.AddTileSide(coord, roomData.GetRoomAccess(tile.tileData.tileType));
     }
+
+
 
     //HELPER
     private List<COORDINATES> GetAdjacentCoordinates()
@@ -288,7 +306,7 @@ public class Room : MonoBehaviour
                     GetTileCoordinatePosition(tile.tileData.tilePosition, coord), this))
                 {
                     Debug.LogWarning("CHANGIN SIDE TO ACCESS SIDE!");
-                    //tType = RoomData.ROOM_TILE_TYPE.ACCESS_SIDE;
+                    tile.tileData.isAccess = true;
                     tile.AddTileSide(coord, roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.ACCESS_SIDE));
                     break;
                 }
@@ -301,7 +319,7 @@ public class Room : MonoBehaviour
                     GetTileCoordinatePosition(tile.tileData.tilePosition, coord), this))
                 {
                     Debug.LogWarning("CHANGIN CONVEX TO ACCESS CONVEX!");
-                    //tType = RoomData.ROOM_TILE_TYPE.ACCESS_CORNER;
+                    tile.tileData.isAccess = true;
                     tile.AddTileSide(coord, roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.ACCESS_CORNER));
                     break;
                 }
@@ -332,6 +350,18 @@ public class Room : MonoBehaviour
         }
 
         return tileCoord;
+    }
+
+    public static Dictionary<Room.COORDINATES, Vector2> GetTileCoordinates(Vector2 centralTile)
+    {
+        Dictionary<Room.COORDINATES, Vector2> coordinates = new Dictionary<COORDINATES, Vector2>();
+
+        coordinates.Add(COORDINATES.UP, new Vector2(centralTile.x, centralTile.y + 1));
+        coordinates.Add(COORDINATES.DOWN, new Vector2(centralTile.x, centralTile.y - 1));
+        coordinates.Add(COORDINATES.RIGHT, new Vector2(centralTile.x + 1, centralTile.y));
+        coordinates.Add(COORDINATES.LEFT, new Vector2(centralTile.x - 1, centralTile.y));
+        
+        return coordinates;
     }
 
     //HELPER
@@ -369,6 +399,16 @@ public class Room : MonoBehaviour
         RoomData.ROOM_TILE_TYPE tType = FindNeighbours(roomTiles, tilePosition, out tNeighbours, out tCoord);
         int rotTier = Room.GetRotationTileTier(tType, tCoord);
         return Tile.CreateTile(tilePosition, parent, roomDataRef.GetRoomFloor(tType), tType, rotTier, GetTileSides(roomDataRef, tType, rotTier));
+    }
+
+    private static Tile GenerateRoomTile(Vector2 tilePosition, GameObject parent, RoomData roomDataRef, List<Tile> roomTiles)
+    {
+        int tNeighbours = 0;
+        List<COORDINATES> tCoord = new List<COORDINATES>();
+        RoomData.ROOM_TILE_TYPE tType = FindNeighbours(roomTiles, tilePosition, out tNeighbours, out tCoord);
+        int rotTier = Room.GetRotationTileTier(tType, tCoord);
+        Tile newTile = RoomsManager.instance.GetMapTile(tilePosition);
+        return Tile.UpdateTile(newTile, parent, roomDataRef.GetRoomFloor(tType), tType, rotTier, GetTileSides(roomDataRef, tType, rotTier));
     }
 
     // !!!
@@ -614,6 +654,24 @@ public class Room : MonoBehaviour
         }
 
         return sides;
+    }
+
+    public static Room.COORDINATES GetOpposite(Room.COORDINATES coord)
+    {
+        switch (coord)
+        {
+            case COORDINATES.UP:
+                return COORDINATES.DOWN;
+            case COORDINATES.DOWN:
+                return COORDINATES.UP;
+            case COORDINATES.LEFT:
+                return COORDINATES.RIGHT;
+            case COORDINATES.RIGHT:
+                return COORDINATES.LEFT;
+            default:
+                Debug.LogWarning("Coordinate " + coord + " has no opposite side.");
+                return COORDINATES.UP;           
+        }
     }
 
     // !!!

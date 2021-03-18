@@ -320,7 +320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ed8a5fb33df73745aeb915b75092ff8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  emptyTilePrefab: {fileID: 9189825712403485052, guid: 7d99b9c05bcd65340aa00c6deccc3360,
+  emptyTilePrefab: {fileID: 1368271822529480069, guid: a5acd663752ce6c4ab457c29bfd93735,
     type: 3}
   roomTypes:
   - {fileID: 11400000, guid: ba9fc542ba6954542aa4d44d77a000d7, type: 2}

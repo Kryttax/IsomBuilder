@@ -150,13 +150,11 @@ public class MouseSelector : MonoBehaviour
                 {
                     //Debug.Log("Mouse being HELD!");
 
-                    //if (prevMousePos != gridPoint && buildingMode)
-                    //{
-                    //    RoomsManager.instance.AddTileToRoom(gridPoint);
-                    //}
-                    endBoxPos = gridPoint;
-                    RoomsManager.instance.EmptyRoomScheme(orgBoxPos, endBoxPos);
-
+                    if (buildingMode == BUILD_MODE.BUILDING)
+                    {
+                        endBoxPos = gridPoint;
+                        RoomsManager.instance.EmptyRoomScheme(orgBoxPos, endBoxPos);
+                    }
                 }
 
                 if (Input.GetMouseButtonUp(1))
@@ -190,8 +188,9 @@ public class MouseSelector : MonoBehaviour
         if (buildingMode == BUILD_MODE.BUILDING)
         {
             buildingMode = BUILD_MODE.NONE;
-            RoomsManager.instance.FillRoom();
-            RoomsManager.instance.UpdateRoom();
+            //RoomsManager.instance.FillRoom();
+            //RoomsManager.instance.UpdateRoom();
+            
             RoomsManager.instance.FinishRoomConstruction();
         }
     }
