@@ -96,6 +96,8 @@ public class Tile : MonoBehaviour
         if (thisTile.tileData.tileType == type && type == RoomData.ROOM_TILE_TYPE.EMPTY)
             return thisTile;
 
+        thisTile.tileData = new TileProperties(thisTile.tileData.tilePosition, type);
+
         if (tilePrefab)
         {
             Destroy(thisTile.tilePrefabRef.gameObject);
@@ -112,7 +114,7 @@ public class Tile : MonoBehaviour
             thisTile.AddTileSides(sides, rotationTier);
         }
 
-        thisTile.tileData = new TileProperties(thisTile.tileData.tilePosition, type);
+
         thisTile.transform.SetParent(roomParent.transform);
         return thisTile;
     }

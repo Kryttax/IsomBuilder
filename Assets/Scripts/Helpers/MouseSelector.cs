@@ -14,6 +14,9 @@ public class MouseSelector : MonoBehaviour
     private Vector2 orgBoxPos = Vector2.zero;
     private Vector2 endBoxPos = Vector2.zero;
 
+    private Vector2 prevOrgBoxPos = Vector2.zero;
+    private Vector2 prevEndBoxPos = Vector2.zero;
+
     [SerializeField]
     private UnityEngine.UI.Button finishRoomButton;
     [SerializeField]
@@ -65,13 +68,19 @@ public class MouseSelector : MonoBehaviour
                             break;
                         case BUILD_MODE.BUILDING:
                             orgBoxPos = gridPoint;
+                            endBoxPos = gridPoint;
+                            RoomsManager.instance.FillRoomScheme(orgBoxPos, endBoxPos);
                             break;
                         case BUILD_MODE.EDITING:
+                            orgBoxPos = gridPoint;
+                            endBoxPos = gridPoint;
+
                             if (RoomsManager.instance.GetOccupiedTileAt(gridPoint) != -1 &&
                                 RoomsManager.instance.AssignRoomEdit(gridPoint))   //Double Check
                             {
-                                buildingMode = BUILD_MODE.BUILDING;
-                                orgBoxPos = gridPoint;
+                                //buildingMode = BUILD_MODE.BUILDING;
+                                //orgBoxPos = gridPoint;
+                                //RoomsManager.instance.FillRoomScheme(orgBoxPos, endBoxPos);
                             }
                             break;
                     }
@@ -81,7 +90,8 @@ public class MouseSelector : MonoBehaviour
                 {
                     //Debug.Log("Mouse being HELD!");
 
-                    if (buildingMode == BUILD_MODE.BUILDING)
+                    if ((buildingMode == BUILD_MODE.BUILDING || buildingMode == BUILD_MODE.EDITING) && 
+                        endBoxPos != gridPoint)
                     {
                         endBoxPos = gridPoint;
                         RoomsManager.instance.FillRoomScheme(orgBoxPos, endBoxPos);
@@ -94,7 +104,7 @@ public class MouseSelector : MonoBehaviour
                 {
                     Debug.Log("Mouse Released!");
                     
-                    if (buildingMode == BUILD_MODE.BUILDING)
+                    if (buildingMode == BUILD_MODE.BUILDING || buildingMode == BUILD_MODE.EDITING)
                     {
                         //endBoxPos = gridPoint;
                         //RoomsManager.instance.FillRoom(orgBoxPos, endBoxPos);
@@ -132,14 +142,18 @@ public class MouseSelector : MonoBehaviour
                             break;
                         case BUILD_MODE.BUILDING:
                             orgBoxPos = gridPoint;
+                            endBoxPos = gridPoint;
                             break;
                         case BUILD_MODE.EDITING:
                             //if (RoomsManager.instance.GetOccupiedTileAt(gridPoint) != -1 &&
                             //    RoomsManager.instance.AssignRoomEdit(gridPoint))   //Double Check
-                            if(RoomsManager.instance.AssignRoomEdit(gridPoint))
+                            orgBoxPos = gridPoint;
+                            endBoxPos = gridPoint;
+
+                            if (RoomsManager.instance.AssignRoomEdit(gridPoint))
                             {
-                                buildingMode = BUILD_MODE.BUILDING;
-                                orgBoxPos = gridPoint;
+                                //buildingMode = BUILD_MODE.BUILDING;
+                                //orgBoxPos = gridPoint;
                             }
                             break;
                     }
@@ -150,7 +164,7 @@ public class MouseSelector : MonoBehaviour
                 {
                     //Debug.Log("Mouse being HELD!");
 
-                    if (buildingMode == BUILD_MODE.BUILDING)
+                    if (buildingMode == BUILD_MODE.BUILDING || buildingMode == BUILD_MODE.EDITING)
                     {
                         endBoxPos = gridPoint;
                         RoomsManager.instance.EmptyRoomScheme(orgBoxPos, endBoxPos);
@@ -161,7 +175,7 @@ public class MouseSelector : MonoBehaviour
                 {
                     Debug.Log("RIGHT Mouse Released!");
 
-                    if (buildingMode == BUILD_MODE.BUILDING)
+                    if (buildingMode == BUILD_MODE.BUILDING || buildingMode == BUILD_MODE.EDITING)
                     {
                         // endBoxPos = gridPoint;
                         //RoomsManager.instance.EmptyRoom();
@@ -186,13 +200,11 @@ public class MouseSelector : MonoBehaviour
     public void OnFinishRoomButton()
     {
         if (buildingMode == BUILD_MODE.BUILDING)
-        {
-            buildingMode = BUILD_MODE.NONE;
-            //RoomsManager.instance.FillRoom();
-            //RoomsManager.instance.UpdateRoom();
-            
             RoomsManager.instance.FinishRoomConstruction();
-        }
+        else if(buildingMode == BUILD_MODE.EDITING)
+            RoomsManager.instance.FinishRoomEditing();
+
+        buildingMode = BUILD_MODE.NONE;
     }
 
     public void OnBuildRoomButton()

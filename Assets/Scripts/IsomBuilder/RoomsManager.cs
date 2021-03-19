@@ -11,7 +11,7 @@ public class MapProperties
 
     public MapProperties(Vector2 mSize, List<TileProperties> tProperties = null)
     {
-        mapSize = new Vector2(50, 50);
+        mapSize = mSize;
 
         if (tProperties != null)
             tilesProperties = new List<TileProperties>(tProperties);
@@ -56,7 +56,7 @@ public class RoomsManager : MonoBehaviour
         List<TileProperties> mTileProperties = Serializer.MapConfig.Get<List<TileProperties>>("Map");
 
         if(mTileProperties == null)
-            mapProperties = new MapProperties(new Vector2(9, 9));
+            mapProperties = new MapProperties(new Vector2(25, 25));
         else
             mapProperties = new MapProperties(Serializer.MapConfig.Get<Vector2>("MapSize"), mTileProperties);
 
@@ -73,15 +73,15 @@ public class RoomsManager : MonoBehaviour
         //Serializer.Config.ResetToDefaultData();
 
         int size = Serializer.Config.Get<int>("Total Rooms");
-        //if (size > 0)
-        //{
-        //    for(int i = 0; i < size; ++i)
-        //    {
-        //        Room loadedRoom = Room.LoadRoom(roomTypes[i].roomID.ToString(), roomTypes[i]);
-        //        loadedRoom.UpdateRoomTiles();
-        //        rooms.Add(loadedRoom);
-        //    }
-        //}
+        if (size > 0)
+        {
+            for (int i = 0; i < size; ++i)
+            {
+                Room loadedRoom = Room.LoadRoom(roomTypes[0].roomID.ToString() + i, roomTypes[0]);
+                rooms.Add(loadedRoom);
+                loadedRoom.UpdateRoomTiles();
+            }
+        }
     }
 
     private void BuildRocks()
@@ -99,6 +99,8 @@ public class RoomsManager : MonoBehaviour
             }
         }
     }
+
+    public int GetRoomNumber() { return rooms.Count; }
 
     //HELPER
     public Tile GetMapTile(Vector2 tilePosition)
@@ -127,16 +129,17 @@ public class RoomsManager : MonoBehaviour
 
     public bool AssignRoomEdit(Vector2 roomTilePosition)
     {
-        for(int i = 0; i < rooms.Count; ++i)
-        {
-            Debug.Log("Checking room: " + rooms[i].name + " in position: " + roomTilePosition);
-            if (Room.IsTileInRoom(rooms[i].roomTiles, roomTilePosition))
+        if(schemeRoom == null)
+            for (int i = 0; i < rooms.Count; ++i)
             {
-                Debug.Log("Room found!");
-                schemeRoom = rooms[i];
-                return true;
+                Debug.Log("Checking room: " + rooms[i].name + " in position: " + roomTilePosition);
+                if (Room.IsTileInRoom(rooms[i].roomTiles, roomTilePosition))
+                {
+                    Debug.Log("Room found!");
+                    schemeRoom = rooms[i];
+                    return true;
+                }
             }
-        }
 
         Debug.Log("Room NOT found.");
         return false;
@@ -220,7 +223,8 @@ public class RoomsManager : MonoBehaviour
 
     public void FillRoomScheme(Vector2 initPos, Vector2 endPos)
     {
-        if(initPointScheme != initPos || endPointScheme != endPos)
+        //if((schemeRoom.roomTiles.Count > 0) || 
+        //    (initPointScheme != initPos || endPointScheme != endPos))
         {
             initPointScheme = initPos;
             endPointScheme = endPos;
@@ -268,9 +272,11 @@ public class RoomsManager : MonoBehaviour
 
         for (int i = 0; i < rooms.Count; ++i)
         {
-            if (rooms[i] != roomToOmit && Room.IsTileInRoom(rooms[i].roomTiles, tilePosition, out accessTile))
+            if (rooms[i].properties.roomIdentifier != roomToOmit.properties.roomIdentifier && 
+                Room.IsTileInRoom(rooms[i].roomTiles, tilePosition, out accessTile))
             {
                 Room.COORDINATES coord = Room.GetTileCoordinate(localTile, accessTile.tileData.tilePosition);
+                accessTile.tileData.isAccess = true;
                 rooms[i].UpdateRoomTile(accessTile, coord);
                 return true;
             }
@@ -279,21 +285,21 @@ public class RoomsManager : MonoBehaviour
         return false;
     }
 
-    public bool CheckIfLocalTileAccess(Vector2 tilePosition)
-    {
-        Tile accessTile = null;
+    //public bool CheckIfLocalTileAccess(Vector2 tilePosition)
+    //{
+    //    Tile accessTile = null;
 
-        for (int i = 0; i < rooms.Count; ++i)
-        {
-            if (Room.IsTileInRoom(rooms[i].roomTiles, tilePosition, out accessTile))
-            {
-                rooms[i].UpdateTileContext(accessTile);
-                return true;
-            }
-        }
+    //    for (int i = 0; i < rooms.Count; ++i)
+    //    {
+    //        if (Room.IsTileInRoom(rooms[i].roomTiles, tilePosition, out accessTile))
+    //        {
+    //            rooms[i].UpdateTileContext(accessTile);
+    //            return true;
+    //        }
+    //    }
 
-        return false;
-    }
+    //    return false;
+    //}
 
 
 
@@ -304,7 +310,8 @@ public class RoomsManager : MonoBehaviour
         foreach(Vector2 coord in coords.Values)
         {
             Tile tileToUpdate = GetMapTile(coord);
-            if (tileToUpdate.tileData.isAccess)
+            if (tileToUpdate.tileData.isAccess && 
+                Tile.GetTileRoom(tileToUpdate).gameObject != Tile.GetTileRoom(GetMapTile(tilePosition)).gameObject) 
             {
                 Tile.GetTileRoom(tileToUpdate).UpdateRoomTile(tileToUpdate);
                 tileToUpdate.tileData.isAccess = false;
@@ -459,6 +466,15 @@ public class RoomsManager : MonoBehaviour
     //    currentRoom.UpdateRoomTiles();
     //}
 
+    public void FinishRoomEditing()
+    {
+        currentRoom = schemeRoom;
+        Serializer.Config.Set("Total Rooms", rooms.Count);
+        Room.SaveRoom(currentRoom.properties.roomIdentifier, currentRoom.properties);
+        schemeRoom = null;
+        currentRoom = null;
+    }
+
     public void FinishRoomConstruction()
     {
         currentRoom = schemeRoom;
@@ -468,7 +484,7 @@ public class RoomsManager : MonoBehaviour
             RemoveRock(currentRoom.roomTiles[i].tileData.tilePosition);
 
         Serializer.Config.Set("Total Rooms", rooms.Count);
-        Room.SaveRoom(roomTypes[0].roomID.ToString(), currentRoom.properties);
+        Room.SaveRoom(currentRoom.properties.roomIdentifier, currentRoom.properties);
         schemeRoom = null;
         currentRoom = null;
     }

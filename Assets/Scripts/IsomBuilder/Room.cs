@@ -11,12 +11,16 @@ namespace IsomBuilder
     public class RoomProperties
     {
         [SUCC.SaveThis] public List<TileProperties> tilesProperties;            //Room TileData (Serialization)
-
-        public RoomProperties(List<TileProperties> tProperties = null)
+        [SUCC.SaveThis] public string roomIdentifier;
+        public RoomProperties(string identifier, List<TileProperties> tProperties = null)
         {
             if (tProperties != null)
+            {
                 tilesProperties = new List<TileProperties>(tProperties);       
+            }
             else tilesProperties = new List<TileProperties>();
+
+            roomIdentifier = identifier;
         }
     }
 }
@@ -43,18 +47,24 @@ public class Room : MonoBehaviour
         }
     }
 
-    public static Room CreateRoom(RoomData rData, List<TileProperties> tProperties = null)
+    public static Room CreateRoom(RoomData rData, List<TileProperties> tProperties = null, string identifier = null)
     {
         if (rData == null)
         {
             Debug.LogError("Room Data not defined. Cannot Create a new Room.");
             return null;
         }
+        if (identifier == null)
+        {
+            //Generate Room Identifier
+            identifier = rData.roomID.ToString() + RoomsManager.instance.GetRoomNumber().ToString();
+        }
 
         var thisRoom = RoomObj.AddComponent<Room>();
+        thisRoom.name = identifier;
 
         thisRoom.roomData = rData;
-        thisRoom.properties = new RoomProperties(tProperties);
+        thisRoom.properties = new RoomProperties(identifier, tProperties);
         thisRoom.roomTiles = new List<Tile>();
         thisRoom.tempRoomSize = new List<Vector2>();
         thisRoom.tempRoomRemoval = new List<Vector2>();
@@ -81,7 +91,7 @@ public class Room : MonoBehaviour
 
         List<TileProperties> loadedRoomTiles = Serializer.Config.Get<List<TileProperties>>(fieldName);
 
-        Room loadedRoom = Room.CreateRoom(type, loadedRoomTiles);
+        Room loadedRoom = Room.CreateRoom(type, loadedRoomTiles, fieldName);
 
         for (int i = 0; i < loadedRoomTiles.Count; ++i)
             RoomsManager.instance.RemoveRock(loadedRoomTiles[i].tilePosition);
@@ -268,33 +278,6 @@ public class Room : MonoBehaviour
         return adjacent;
     }
 
-    //private void CheckRoomContext(Tile tile, List<COORDINATES> tCoord)
-    //{
-    //    if (tile.tileData.tileType == RoomData.ROOM_TILE_TYPE.SIDE)
-    //    {
-    //        foreach (Room.COORDINATES coord in tCoord)
-    //            if (RoomsManager.instance.CheckIfLocalTileAccess(GetTileCoordinatePosition(tile.tileData.tilePosition, coord)))
-    //            {
-    //                Debug.LogWarning("CHANGIN SIDE TO ACCESS SIDE!");
-    //                //tType = RoomData.ROOM_TILE_TYPE.ACCESS_SIDE;
-    //                tile.AddTileSide(coord, roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.ACCESS_SIDE));
-    //                break;
-    //            }
-    //    }
-
-    //    else if (tile.tileData.tileType == RoomData.ROOM_TILE_TYPE.CONVEX_CORNER)
-    //    {
-    //        foreach (Room.COORDINATES coord in tCoord)
-    //            if (RoomsManager.instance.CheckIfLocalTileAccess(GetTileCoordinatePosition(tile.tileData.tilePosition, coord)))
-    //            {
-    //                Debug.LogWarning("CHANGIN CONVEX TO ACCESS CONVEX!");
-    //                //tType = RoomData.ROOM_TILE_TYPE.ACCESS_CORNER;
-    //                tile.AddTileSide(coord, roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.ACCESS_CORNER));
-    //                break;
-    //            }
-    //    }
-    //}
-
     public void UpdateTileContext(Tile tile)
     {
         List<COORDINATES> tCoord = GetAdjacentCoordinates();
@@ -425,6 +408,12 @@ public class Room : MonoBehaviour
             case RoomData.ROOM_TILE_TYPE.EMPTY:
                 break;
             case RoomData.ROOM_TILE_TYPE.FLOOR:
+                break;
+            case RoomData.ROOM_TILE_TYPE.SINGLE_FLOOR:
+                sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
                 break;
             case RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER:
                 switch (rotTier)
@@ -687,6 +676,9 @@ public class Room : MonoBehaviour
             case RoomData.ROOM_TILE_TYPE.FLOOR:
                 tier = 0;
                 break;
+            case RoomData.ROOM_TILE_TYPE.SINGLE_FLOOR:
+                tier = 0;
+                break;
             case RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER:
                 if (!tCoordinates.Contains(COORDINATES.UPLEFT))
                     tier = 0;
@@ -838,6 +830,9 @@ public class Room : MonoBehaviour
             case 1:
                 tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_CONVEX;
                 break;
+            case 0:
+                tileType = RoomData.ROOM_TILE_TYPE.SINGLE_FLOOR;
+                break;
             default:
                 tileType = RoomData.ROOM_TILE_TYPE.EMPTY;
                 Debug.LogWarning("Room Illegal!");
@@ -854,7 +849,7 @@ public class Room : MonoBehaviour
 
         totalNeighbours = adjacentNeighbours;
 
-        if (tileType == RoomData.ROOM_TILE_TYPE.EMPTY)
+        if (tileType == RoomData.ROOM_TILE_TYPE.EMPTY || tileType == RoomData.ROOM_TILE_TYPE.SINGLE_FLOOR)
             return tileType;
         
         int neighbours = 0;
