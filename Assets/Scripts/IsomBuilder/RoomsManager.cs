@@ -70,8 +70,6 @@ public class RoomsManager : MonoBehaviour
         }
        
 
-        //Serializer.Config.ResetToDefaultData();
-
         int size = Serializer.Config.Get<int>("Total Rooms");
         if (size > 0)
         {
@@ -132,45 +130,15 @@ public class RoomsManager : MonoBehaviour
         if(schemeRoom == null)
             for (int i = 0; i < rooms.Count; ++i)
             {
-                Debug.Log("Checking room: " + rooms[i].name + " in position: " + roomTilePosition);
                 if (Room.IsTileInRoom(rooms[i].roomTiles, roomTilePosition))
-                {
-                    Debug.Log("Room found!");
+                {                 
                     schemeRoom = rooms[i];
                     return true;
                 }
             }
 
-        Debug.Log("Room NOT found.");
         return false;
     }
-
-    //public void AddEmptyTile(Vector2 position)
-    //{
-    //    int index = GetOccupiedTileAt(position);
-
-    //    if (index != -1)
-    //    {
-    //        emptyTiles.Add(Tile.CreateTile(position, instance.gameObject, emptyTilePrefab));
-    //        occupiedTiles.RemoveAt(index);
-    //    }
-    //    else
-    //        Debug.LogError("This tile "+ position +" is already empty, cannot add a empty tile here.");
-    //}
-
-    //public void RemoveEmptyTile(Vector2 position)
-    //{
-    //    int index = GetEmptyTileAt(position);
-
-    //    if (index != -1)
-    //    {
-    //        occupiedTiles.Add(new Vector2(emptyTiles[index].tileData.tilePosition.x, emptyTiles[index].tileData.tilePosition.y));
-    //        Destroy(emptyTiles[index].gameObject);
-    //        emptyTiles.RemoveAt(index);
-
-    //        Debug.Log("Tile Removed at: " + position);
-    //    }
-    //}
 
     public void AddRock(Vector2 position)
     {
@@ -192,7 +160,6 @@ public class RoomsManager : MonoBehaviour
         if (index != -1)
         {
             occupiedTiles.Add(emptyTiles[index]);
-            //Destroy(emptyTiles[index].gameObject);
             emptyTiles.RemoveAt(index);
 
             Debug.Log("Rock Removed at: " + position);
@@ -261,7 +228,7 @@ public class RoomsManager : MonoBehaviour
             }
 
             schemeRoom.FillRoomTiles();
-            schemeRoom.UpdateRoomTiles();
+            //schemeRoom.UpdateRoomTiles();
         }       
     }
 
@@ -275,7 +242,7 @@ public class RoomsManager : MonoBehaviour
             if (rooms[i].properties.roomIdentifier != roomToOmit.properties.roomIdentifier && 
                 Room.IsTileInRoom(rooms[i].roomTiles, tilePosition, out accessTile))
             {
-                Room.COORDINATES coord = Room.GetTileCoordinate(localTile, accessTile.tileData.tilePosition);
+                COORDINATES coord = Room.GetTileOppositeCoordinate(localTile, accessTile.tileData.tilePosition);
                 accessTile.tileData.isAccess = true;
                 rooms[i].UpdateRoomTile(accessTile, coord);
                 return true;
@@ -306,7 +273,7 @@ public class RoomsManager : MonoBehaviour
     public void PropagateChangesToAccess(Vector2 tilePosition)
     {
         //Omit opposite coord in neighbourChanges
-        Dictionary<Room.COORDINATES, Vector2>  coords = Room.GetTileCoordinates(tilePosition);
+        Dictionary<COORDINATES, Vector2>  coords = Room.GetTileAdjacentCoordinates(tilePosition);
         foreach(Vector2 coord in coords.Values)
         {
             Tile tileToUpdate = GetMapTile(coord);
@@ -323,7 +290,7 @@ public class RoomsManager : MonoBehaviour
     public void GenerateEmptyRock(Vector2 tilePosition)
     {
         Tile newTile = RoomsManager.instance.GetMapTile(tilePosition);
-        Tile.UpdateTile(newTile, this.gameObject, emptyTilePrefab);
+        newTile.UpdateTile(this.gameObject, emptyTilePrefab);
 
         AddRock(newTile.tileData.tilePosition);
         //occupiedTiles.Remove(newTile.tileData.tilePosition);
@@ -344,15 +311,6 @@ public class RoomsManager : MonoBehaviour
             initPointScheme = initPos;
             endPointScheme = endPos;
 
-            //schemeRoom.ClearEntireRoom();
-            //if(currentRoom.roomTiles.Count > 0)
-            //{
-            //    schemeRoom.roomTiles = new List<Tile>(currentRoom.roomTiles);
-            //    schemeRoom.FillRoomTiles();
-            //    for (int i = 0; i < currentRoom.roomTiles.Count; ++i)
-            //        schemeRoom.AddTile(currentRoom.roomTiles[i].tileData.tilePosition);
-            //}
-
             Vector2[] points;
             points = RectangleHelper.GetRectanglePoints(initPointScheme, endPointScheme);
 
@@ -363,7 +321,7 @@ public class RoomsManager : MonoBehaviour
             }
 
             schemeRoom.ClearRoomTiles();
-            schemeRoom.UpdateRoomTiles();
+            //schemeRoom.UpdateRoomTiles();
         }
     }
 
@@ -393,22 +351,22 @@ public class RoomsManager : MonoBehaviour
     //    currentRoom.FillRoomTiles();
     //}
 
-    public void FillRoom()
-    {
-        initPointScheme = endPointScheme = Vector2.zero;
+    //public void FillRoom()
+    //{
+    //    initPointScheme = endPointScheme = Vector2.zero;
 
-        //Vector2[] points;
-        //points = RectangleHelper.GetRectanglePoints(initPos, endPos);
+    //    //Vector2[] points;
+    //    //points = RectangleHelper.GetRectanglePoints(initPos, endPos);
 
-        for (int i = 0; i < schemeRoom.roomTiles.Count; ++i)
-        {
-            currentRoom.AddTile(new Vector2(schemeRoom.roomTiles[i].tileData.tilePosition.x, 
-                schemeRoom.roomTiles[i].tileData.tilePosition.y));
-        }
+    //    for (int i = 0; i < schemeRoom.roomTiles.Count; ++i)
+    //    {
+    //        currentRoom.AddTile(new Vector2(schemeRoom.roomTiles[i].tileData.tilePosition.x, 
+    //            schemeRoom.roomTiles[i].tileData.tilePosition.y));
+    //    }
 
-        currentRoom.FillRoomTiles();
-        schemeRoom.ClearEntireRoom();
-    }
+    //    currentRoom.FillRoomTiles();
+    //    schemeRoom.ClearEntireRoom();
+    //}
 
     public void EmptyRoom()
     {

@@ -16,7 +16,7 @@ namespace IsomBuilder
         //public TILE_STATUS currentStatus { get; private set; }
         public RoomData.ROOM_TILE_TYPE tileType { get; set; }
         public Vector2 tilePosition { get; set; }
-        //public int tileRotationTier { get; set; }
+
         public bool isAccess { get; set; }
         public TileProperties()
         {
@@ -40,7 +40,7 @@ public class Tile : MonoBehaviour
     public TileProperties tileData { get; private set; }
 
     private GameObject tilePrefabRef;
-    private Dictionary<Room.COORDINATES, GameObject> tileSidesRef;
+    private Dictionary<COORDINATES, GameObject> tileSidesRef;
 
     private static GameObject tileRef;
     public static GameObject TileObj
@@ -56,29 +56,26 @@ public class Tile : MonoBehaviour
     }
 
     public static Tile CreateTile(Vector2 gridPosition, GameObject roomParent, GameObject tilePrefab = null, 
-        RoomData.ROOM_TILE_TYPE type = RoomData.ROOM_TILE_TYPE.EMPTY, int rotationTier = 0, Dictionary<Room.COORDINATES, GameObject> sides = null)
+        RoomData.ROOM_TILE_TYPE type = RoomData.ROOM_TILE_TYPE.EMPTY, int rotationTier = 0, Dictionary<COORDINATES, GameObject> sides = null)
     {
         var thisTile = TileObj.AddComponent<Tile>();
-        thisTile.tileSidesRef = new Dictionary<Room.COORDINATES, GameObject>();
+        thisTile.tileSidesRef = new Dictionary<COORDINATES, GameObject>();
 
-        thisTile.tileSidesRef.Add(Room.COORDINATES.UP, null);
-        thisTile.tileSidesRef.Add(Room.COORDINATES.DOWN, null);
-        thisTile.tileSidesRef.Add(Room.COORDINATES.LEFT, null);
-        thisTile.tileSidesRef.Add(Room.COORDINATES.RIGHT, null);
+        thisTile.tileSidesRef.Add(COORDINATES.UP, null);
+        thisTile.tileSidesRef.Add(COORDINATES.DOWN, null);
+        thisTile.tileSidesRef.Add(COORDINATES.LEFT, null);
+        thisTile.tileSidesRef.Add(COORDINATES.RIGHT, null);
 
         thisTile.tileData = new TileProperties(gridPosition, type);
 
         if (tilePrefab)
         {
             thisTile.tilePrefabRef = GameObject.Instantiate(tilePrefab);
-            //thisTile.tilePrefabRef.transform.localEulerAngles = new Vector3(0f, rotationTier * 90f, 0f);
             thisTile.tilePrefabRef.transform.SetParent(thisTile.transform);
         }
 
         if(sides != null)
         {
-            //foreach (Room.COORDINATES coord in sides.Keys)
-            //    thisTile.AddTileSide(coord, sides[coord], rotationTier);
             thisTile.AddTileSides(sides, rotationTier);
         }
 
@@ -90,87 +87,108 @@ public class Tile : MonoBehaviour
         return thisTile;
     }
 
-    public static Tile UpdateTile(Tile thisTile, GameObject roomParent, GameObject tilePrefab = null,
-        RoomData.ROOM_TILE_TYPE type = RoomData.ROOM_TILE_TYPE.EMPTY, int rotationTier = 0, Dictionary<Room.COORDINATES, GameObject> sides = null)
+    public void UpdateTile(GameObject roomParent, GameObject tilePrefab = null,
+       RoomData.ROOM_TILE_TYPE type = RoomData.ROOM_TILE_TYPE.EMPTY, int rotationTier = 0, Dictionary<COORDINATES, GameObject> sides = null)
     {
-        if (thisTile.tileData.tileType == type && type == RoomData.ROOM_TILE_TYPE.EMPTY)
-            return thisTile;
+        if (this.tileData.tileType == type && type == RoomData.ROOM_TILE_TYPE.EMPTY)
+            return;
 
-        thisTile.tileData = new TileProperties(thisTile.tileData.tilePosition, type);
+        this.tileData = new TileProperties(this.tileData.tilePosition, type);
 
         if (tilePrefab)
         {
-            Destroy(thisTile.tilePrefabRef.gameObject);
-            thisTile.tilePrefabRef = GameObject.Instantiate(tilePrefab);
-            thisTile.tilePrefabRef.transform.SetParent(thisTile.transform);
-            thisTile.tilePrefabRef.transform.localPosition = tilePrefab.transform.position;    //PIVOT
+            Destroy(this.tilePrefabRef.gameObject);
+            this.tilePrefabRef = GameObject.Instantiate(tilePrefab);
+            this.tilePrefabRef.transform.SetParent(this.transform);
+            this.tilePrefabRef.transform.localPosition = tilePrefab.transform.position;    //PIVOT
         }
 
-        thisTile.ClearSideReferences();
+        this.ClearSideReferences();
 
         if (sides != null)
         {
-            //RemoveTileSides(thisTile.tileSidesRef);
-            thisTile.AddTileSides(sides, rotationTier);
+            this.AddTileSides(sides, rotationTier);
         }
 
-
-        thisTile.transform.SetParent(roomParent.transform);
-        return thisTile;
+        this.transform.SetParent(roomParent.transform);
     }
+
+    //public static Tile UpdateTile(Tile thisTile, GameObject roomParent, GameObject tilePrefab = null,
+    //    RoomData.ROOM_TILE_TYPE type = RoomData.ROOM_TILE_TYPE.EMPTY, int rotationTier = 0, Dictionary<COORDINATES, GameObject> sides = null)
+    //{
+    //    if (thisTile.tileData.tileType == type && type == RoomData.ROOM_TILE_TYPE.EMPTY)
+    //        return thisTile;
+
+    //    thisTile.tileData = new TileProperties(thisTile.tileData.tilePosition, type);
+
+    //    if (tilePrefab)
+    //    {
+    //        Destroy(thisTile.tilePrefabRef.gameObject);
+    //        thisTile.tilePrefabRef = GameObject.Instantiate(tilePrefab);
+    //        thisTile.tilePrefabRef.transform.SetParent(thisTile.transform);
+    //        thisTile.tilePrefabRef.transform.localPosition = tilePrefab.transform.position;    //PIVOT
+    //    }
+
+    //    thisTile.ClearSideReferences();
+
+    //    if (sides != null)
+    //    {
+    //        //RemoveTileSides(thisTile.tileSidesRef);
+    //        thisTile.AddTileSides(sides, rotationTier);
+    //    }
+
+
+    //    thisTile.transform.SetParent(roomParent.transform);
+    //    return thisTile;
+    //}
 
     public static Room GetTileRoom(Tile tile) { return tile.transform.parent.gameObject.GetComponent<Room>(); }
 
-    public void AddTileSide(Room.COORDINATES coord, GameObject sidePrefab , int rotationTier = 0)
+    public void AddTileSide(COORDINATES coord, GameObject sidePrefab, int rotationTier = 0)
     {
-        //if (sidePrefab)
+        if (this.tileSidesRef[coord])
+            Destroy(this.tileSidesRef[coord].gameObject);
+
+        switch (coord)
         {
-            //this.tileSidesRef[coord] = GameObject.Instantiate(sidePrefab, this.transform);
-            //this.tileSidesRef[coord].transform.localPosition += sidePrefab.transform.position;
-            //this.tileSidesRef[coord].transform.localEulerAngles = new Vector3(0f, rotationTier * 90f, 0f);
-            if(this.tileSidesRef[coord])
-                Destroy(this.tileSidesRef[coord].gameObject);
-
-            switch (coord)
-            {
-                case Room.COORDINATES.UP:
-                    rotationTier = 0;
-                    break;
-                case Room.COORDINATES.DOWN:
-                    rotationTier = 2;
-                    break;
-                case Room.COORDINATES.LEFT:
-                    rotationTier = 3;
-                    break;
-                case Room.COORDINATES.RIGHT:
-                    rotationTier = 1;
-                    break;
-            }
-
-            this.tileSidesRef[coord] = GameObject.Instantiate(sidePrefab, this.transform);
-            this.tileSidesRef[coord].transform.localEulerAngles = new Vector3(0f, rotationTier * 90f, 0f);
+            case COORDINATES.UP:
+                rotationTier = 0;
+                break;
+            case COORDINATES.DOWN:
+                rotationTier = 2;
+                break;
+            case COORDINATES.LEFT:
+                rotationTier = 3;
+                break;
+            case COORDINATES.RIGHT:
+                rotationTier = 1;
+                break;
         }
+
+        this.tileSidesRef[coord] = GameObject.Instantiate(sidePrefab, this.transform);
+        this.tileSidesRef[coord].transform.localEulerAngles = new Vector3(0f, rotationTier * 90f, 0f);
+
     }
 
-    public void AddTileSides(Dictionary<Room.COORDINATES, GameObject> sides, int rotationTier = 0)
+    public void AddTileSides(Dictionary<COORDINATES, GameObject> sides, int rotationTier = 0)
     {
         ClearSideReferences();
-        foreach (Room.COORDINATES coord in sides.Keys)
+        foreach (COORDINATES coord in sides.Keys)
         {
             if(sides[coord] != null)
             {
                 switch (coord)
                 {
-                    case Room.COORDINATES.UP:
+                    case COORDINATES.UP:
                         rotationTier = 0;
                         break;
-                    case Room.COORDINATES.DOWN:
+                    case COORDINATES.DOWN:
                         rotationTier = 2;
                         break;
-                    case Room.COORDINATES.LEFT:
+                    case COORDINATES.LEFT:
                         rotationTier = 3;
                         break;
-                    case Room.COORDINATES.RIGHT:
+                    case COORDINATES.RIGHT:
                         rotationTier = 1;
                         break;
                 }
@@ -180,29 +198,12 @@ public class Tile : MonoBehaviour
         }
     }
 
-    private static void RemoveTileSides(Dictionary<Room.COORDINATES, GameObject> tileSides)
-    {
-        foreach(Room.COORDINATES coord in tileSides.Keys)
-        {
-            if (tileSides[coord] != null)
-                Destroy(tileSides[coord].gameObject);
-        }
-        //for(int i = 0; i < tileSides.Values.Count; ++i)
-        //{
-        //    GameObject go = tileSides.Values.ElementAt(i);
-        //    if(go)
-        //        Destroy(go.gameObject);
-        //}
-    }
-
-    //public void UpdateTile(GameObject newTilePrefab, RoomData.ROOM_TILE_TYPE newType, int rotationTier = 0)
+    //private static void RemoveTileSides(Dictionary<COORDINATES, GameObject> tileSides)
     //{
-    //    if (tilePrefabRef && newType != tileData.tileType)
+    //    foreach(COORDINATES coord in tileSides.Keys)
     //    {
-    //        Destroy(tilePrefabRef.gameObject);
-    //        tilePrefabRef = GameObject.Instantiate(newTilePrefab, this.transform);
-    //        tileData.tileType = newType;
-    //        this.tilePrefabRef.transform.localEulerAngles = new Vector3(0f, rotationTier * 90f, 0f);
+    //        if (tileSides[coord] != null)
+    //            Destroy(tileSides[coord].gameObject);
     //    }
     //}
 
@@ -223,9 +224,10 @@ public class Tile : MonoBehaviour
         Destroy(this.gameObject);
     }
 
+    //HELPER
     private void ClearSideReferences()
     {
-        foreach (Room.COORDINATES coord in this.tileSidesRef.Keys)
+        foreach (COORDINATES coord in this.tileSidesRef.Keys)
             if(this.tileSidesRef[coord])
                 Destroy(this.tileSidesRef[coord].gameObject);
     }

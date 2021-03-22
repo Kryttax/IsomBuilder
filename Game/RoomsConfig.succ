@@ -1,4 +1,4 @@
-Total Rooms: 2
+Total Rooms: 3
 RED_ROOM0:
     -
         tileType: FLOOR
@@ -534,6 +534,162 @@ RED_ROOM0:
             x: 12
             y: 10
         isAccess: true
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 8
+            y: 6
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 9
+            y: 6
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 10
+            y: 6
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 10
+            y: 5
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 9
+            y: 5
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 8
+            y: 5
+        isAccess: false
+    -
+        tileType: CONCAVE_CORNER
+        tilePosition:
+            x: 11
+            y: 6
+        isAccess: false
+    -
+        tileType: CONCAVE_CORNER
+        tilePosition:
+            x: 11
+            y: 5
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 11
+            y: 4
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 10
+            y: 4
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 9
+            y: 4
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 8
+            y: 4
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 8
+            y: 9
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 8
+            y: 8
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 9
+            y: 9
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 9
+            y: 8
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 10
+            y: 9
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 10
+            y: 8
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 10
+            y: 7
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 9
+            y: 7
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 8
+            y: 7
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 11
+            y: 9
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 11
+            y: 8
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 11
+            y: 7
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 12
+            y: 6
+        isAccess: true
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 12
+            y: 5
+        isAccess: true
 RED_ROOM1:
     -
         tileType: CONCAVE_CORNER
@@ -774,4 +930,773 @@ RED_ROOM1:
         tilePosition:
             x: 14
             y: 5
+        isAccess: false
+RED_ROOM2:
+    -
+        tileType: DOUBLE_CONVEX
+        tilePosition:
+            x: 16
+            y: 15
+        isAccess: false
+    -
+        tileType: DOUBLE_CONVEX
+        tilePosition:
+            x: 16
+            y: 14
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 17
+            y: 15
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 17
+            y: 14
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 18
+            y: 15
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 18
+            y: 14
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 18
+            y: 13
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 17
+            y: 13
+        isAccess: false
+    -
+        tileType: DOUBLE_CONVEX
+        tilePosition:
+            x: 16
+            y: 13
+        isAccess: false
+    -
+        tileType: DOUBLE_CONVEX
+        tilePosition:
+            x: 19
+            y: 15
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 19
+            y: 14
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 19
+            y: 13
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 20
+            y: 15
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 20
+            y: 14
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 20
+            y: 13
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 20
+            y: 12
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 19
+            y: 12
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 18
+            y: 12
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 17
+            y: 12
+        isAccess: false
+    -
+        tileType: DOUBLE_CONVEX
+        tilePosition:
+            x: 16
+            y: 12
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 21
+            y: 15
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 21
+            y: 14
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 21
+            y: 13
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 21
+            y: 12
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 22
+            y: 15
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 22
+            y: 14
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 22
+            y: 13
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 22
+            y: 12
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 23
+            y: 15
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 23
+            y: 14
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 23
+            y: 13
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 23
+            y: 12
+        isAccess: false
+    -
+        tileType: DOUBLE_CONVEX
+        tilePosition:
+            x: 24
+            y: 15
+        isAccess: false
+    -
+        tileType: DOUBLE_CONVEX
+        tilePosition:
+            x: 24
+            y: 14
+        isAccess: false
+    -
+        tileType: DOUBLE_CONVEX
+        tilePosition:
+            x: 24
+            y: 13
+        isAccess: false
+    -
+        tileType: DOUBLE_CONVEX
+        tilePosition:
+            x: 24
+            y: 12
+        isAccess: false
+    -
+        tileType: DOUBLE_CONVEX
+        tilePosition:
+            x: 24
+            y: 11
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 23
+            y: 11
+        isAccess: false
+    -
+        tileType: CONCAVE_CORNER
+        tilePosition:
+            x: 22
+            y: 11
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 21
+            y: 11
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 20
+            y: 11
+        isAccess: false
+    -
+        tileType: DOUBLE_SIDED
+        tilePosition:
+            x: 19
+            y: 11
+        isAccess: false
+    -
+        tileType: DOUBLE_CONVEX
+        tilePosition:
+            x: 18
+            y: 11
+        isAccess: false
+    -
+        tileType: DOUBLE_SIDED
+        tilePosition:
+            x: 17
+            y: 11
+        isAccess: false
+    -
+        tileType: SINGLE_FLOOR
+        tilePosition:
+            x: 16
+            y: 11
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 20
+            y: 10
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 20
+            y: 9
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 21
+            y: 10
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 21
+            y: 9
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 21
+            y: 8
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 20
+            y: 8
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 22
+            y: 10
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 22
+            y: 9
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 22
+            y: 8
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 22
+            y: 7
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 21
+            y: 7
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 20
+            y: 7
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 23
+            y: 10
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 23
+            y: 9
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 23
+            y: 8
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 23
+            y: 7
+        isAccess: false
+    -
+        tileType: DOUBLE_CONVEX
+        tilePosition:
+            x: 16
+            y: 14
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 17
+            y: 14
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 17
+            y: 13
+        isAccess: false
+    -
+        tileType: DOUBLE_CONVEX
+        tilePosition:
+            x: 16
+            y: 13
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 18
+            y: 14
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 18
+            y: 13
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 19
+            y: 14
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 19
+            y: 13
+        isAccess: false
+    -
+        tileType: DOUBLE_CONVEX
+        tilePosition:
+            x: 20
+            y: 14
+        isAccess: false
+    -
+        tileType: DOUBLE_SIDED
+        tilePosition:
+            x: 20
+            y: 13
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 20
+            y: 12
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 19
+            y: 12
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 18
+            y: 12
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 17
+            y: 12
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 16
+            y: 12
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 21
+            y: 14
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 21
+            y: 13
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 21
+            y: 12
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 19
+            y: 11
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 18
+            y: 11
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 17
+            y: 11
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 16
+            y: 11
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 22
+            y: 14
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 22
+            y: 13
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 22
+            y: 12
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 19
+            y: 10
+        isAccess: false
+    -
+        tileType: CONCAVE_CORNER
+        tilePosition:
+            x: 18
+            y: 10
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 17
+            y: 10
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 16
+            y: 10
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 18
+            y: 9
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 19
+            y: 9
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 19
+            y: 8
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 18
+            y: 8
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 19
+            y: 7
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 18
+            y: 7
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 18
+            y: 6
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 18
+            y: 5
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 19
+            y: 6
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 19
+            y: 5
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 20
+            y: 6
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 20
+            y: 5
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 20
+            y: 4
+        isAccess: false
+    -
+        tileType: CONCAVE_CORNER
+        tilePosition:
+            x: 19
+            y: 4
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 18
+            y: 4
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 21
+            y: 6
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 21
+            y: 5
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 21
+            y: 4
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 22
+            y: 6
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 22
+            y: 5
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 22
+            y: 4
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 23
+            y: 6
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 23
+            y: 5
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 23
+            y: 4
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 19
+            y: 2
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 20
+            y: 2
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 20
+            y: 1
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 19
+            y: 1
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 21
+            y: 2
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 21
+            y: 1
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 22
+            y: 2
+        isAccess: false
+    -
+        tileType: DOUBLE_SIDED
+        tilePosition:
+            x: 22
+            y: 1
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 22
+            y: 3
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 21
+            y: 3
+        isAccess: false
+    -
+        tileType: FLOOR
+        tilePosition:
+            x: 20
+            y: 3
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 19
+            y: 3
+        isAccess: false
+    -
+        tileType: SIDE
+        tilePosition:
+            x: 23
+            y: 3
+        isAccess: false
+    -
+        tileType: CONVEX_CORNER
+        tilePosition:
+            x: 23
+            y: 2
         isAccess: false
