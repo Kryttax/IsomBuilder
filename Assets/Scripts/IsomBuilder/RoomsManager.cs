@@ -228,23 +228,40 @@ public class RoomsManager : MonoBehaviour
             }
 
             schemeRoom.FillRoomTiles();
+
             //schemeRoom.UpdateRoomTiles();
         }       
     }
 
+    //public void UpdateTypeIfTileAccess(Vector2 localTile, Vector2 tileCheckerPosition, Room roomToOmit)
+    //{
+    //    Tile accessTile = null;
+
+    //    for (int i = 0; i < rooms.Count; ++i)
+    //    {
+    //        if (rooms[i].properties.roomIdentifier != roomToOmit.properties.roomIdentifier &&
+    //            Room.IsTileInRoom(rooms[i].roomTiles, tileCheckerPosition, out accessTile))
+    //        {
+    //            COORDINATES coord = Room.GetTileOppositeCoordinate(localTile, accessTile.tileData.tilePosition);
+    //            accessTile.tileData.isAccess = true;
+    //            rooms[i].UpdateRoomTileAccess(accessTile, coord);
+    //        }
+    //    }
+    //}
+
     //OMIT CURENT ROOM
-    public bool CheckIfTileAccess(Vector2 localTile, Vector2 tilePosition, Room roomToOmit)
+    public bool CheckIfTileAccess(Vector2 localTile, Vector2 tileCheckerPosition, Room roomToOmit)
     {
         Tile accessTile = null;
 
         for (int i = 0; i < rooms.Count; ++i)
         {
             if (rooms[i].properties.roomIdentifier != roomToOmit.properties.roomIdentifier && 
-                Room.IsTileInRoom(rooms[i].roomTiles, tilePosition, out accessTile))
+                Room.IsTileInRoom(rooms[i].roomTiles, tileCheckerPosition, out accessTile))
             {
                 COORDINATES coord = Room.GetTileOppositeCoordinate(localTile, accessTile.tileData.tilePosition);
                 accessTile.tileData.isAccess = true;
-                rooms[i].UpdateRoomTile(accessTile, coord);
+                rooms[i].UpdateRoomTileAccess(accessTile, coord);
                 return true;
             }
         }

@@ -24,14 +24,14 @@ public class RoomData : ScriptableObject
     }
     public TilePrefabTypes[] tilePrefabs = new TilePrefabTypes[2];
 
-    [Serializable]
-    public struct TileTypes
-    {
-        public ROOM_TILE_TYPE type;
-        public GameObject floor;
-        public GameObject wall;
-    }
-    public TileTypes[] roomTiles;
+    //[Serializable]
+    //public struct TileTypes
+    //{
+    //    public ROOM_TILE_TYPE type;
+    //    public GameObject floor;
+    //    public GameObject wall;
+    //}
+    //public TileTypes[] roomTiles;
 
     //public TilesDictionary roomTiles;
     public GameObject GetRoomFloor(ROOM_TILE_TYPE newType)
