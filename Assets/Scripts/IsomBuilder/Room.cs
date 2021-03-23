@@ -28,8 +28,6 @@ namespace IsomBuilder
 
 public class Room : MonoBehaviour
 {
-    //public enum COORDINATES { UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT }
-
     public RoomData roomData { get; private set; }
     public RoomProperties properties { get; private set; }
     public List<Tile> roomTiles { get; set; }                           //GameObject References (WIPE BEFORE/AFTER EVERY GAME INIT)
@@ -110,22 +108,7 @@ public class Room : MonoBehaviour
 
         Room loadedRoom = Room.CreateRoom(type, loadedRoomTiles, fieldName);
  
-        //for (int i = 0; i < loadedRoomTiles.Count; ++i)
-        //{
-        //    Tile newTile = GenerateRoomTile(loadedRoomTiles[i].tilePosition, loadedRoom.gameObject, loadedRoom.roomData, loadedRoom.roomTilesPosition);
-        //    //loadedRoom.roomTiles.Add(Tile.CreateTile(loadedRoomTiles[i].tilePosition, loadedRoom.gameObject,
-        //    //    loadedRoom.roomData.GetRoomTile(FindNeighbours(loadedRoom.roomTiles, loadedRoomTiles[i].tilePosition))));
-        //    loadedRoom.roomTiles.Add(newTile);
-        //}
-
         return loadedRoom;
-
-        //for (int i = 0; i < tProperties.Count; ++i)
-        //{
-        //    roomTiles.Add(Tile.CreateTile(properties.tilesProperties[i].tilePosition, this.gameObject, 
-        //        roomData.GetRoomTile(FindNeighbours(roomTiles, properties.tilesProperties[i].tilePosition))));
-        //}
-
     }
 
     public static bool IsTileInRoom(List<Vector2> rTiles, Vector2 tilePosition)
@@ -183,19 +166,6 @@ public class Room : MonoBehaviour
         return rTiles[result].tileData.tileType;
     }
 
-
-    //public static bool IsTileInRoom(List<Tile> rTiles, Vector2 tilePosition, out RoomData.ROOM_TILE_TYPE tileType)
-    //{
-    //    tileType = RoomData.ROOM_TILE_TYPE.EMPTY;
-    //    int result = rTiles.FindIndex(pos => pos.tileData.tilePosition.x == tilePosition.x && pos.tileData.tilePosition.y == tilePosition.y);
-
-    //    if (result == -1)
-    //        return false;
-
-    //    tileType = rTiles[result].tileData.tileType;
-    //    return true;
-    //}
-
     public void FillRoomTiles()
     {
         for (int i = 0; i < tempRoomSize.Count; ++i)
@@ -234,29 +204,6 @@ public class Room : MonoBehaviour
 
         tempRoomRemoval.Clear();
     }
-
-    //public void ClearRoomTiles()
-    //{
-    //    for (int i = 0; i < tempRoomRemoval.Count; ++i)
-    //    {
-    //        //int tileToDelete = 
-    //        Tile tileToDelete = roomTiles.Find(x => x.tileData.tilePosition == tempRoomRemoval[i]);
-    //        if (tileToDelete)
-    //        {
-    //            if (roomTiles[tileToDelete].tileData.isAccess)
-    //                RoomsManager.instance.PropagateChangesToAccess(roomTiles[tileToDelete].tileData.tilePosition);
-    //            RoomsManager.instance.GenerateEmptyRock(roomTiles[tileToDelete].tileData.tilePosition);
-
-    //            roomTiles.RemoveAt(tileToDelete);
-    //            roomTilesPosition.Remove(roomTiles[tileToDelete].tileData.tilePosition);
-    //            properties.tilesProperties.RemoveAt(tileToDelete);
-    //            UpdateTileNeighbours(newTile, roomTiles);
-    //        }
-    //    }
-
-    //    tempRoomRemoval.Clear();
-    //}
-
 
     public void ClearEntireRoom()
     {
@@ -586,6 +533,28 @@ public class Room : MonoBehaviour
                         break;
                 }
                 break;
+
+            case RoomData.ROOM_TILE_TYPE.DOUBLE_EYED_CONCAVE:
+                switch (rotTier)
+                {
+                    case 0:
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        break;
+                    case 1:
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        break;
+                    //case 2:
+                    //    sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                    //    sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                    //    break;
+                    //case 3:
+                    //    sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                    //    sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                    //    break;
+                }
+                break;
             case RoomData.ROOM_TILE_TYPE.DOUBLE_CONVEX:
                 switch (rotTier)
                 {
@@ -628,6 +597,48 @@ public class Room : MonoBehaviour
                         break;
                 }
                 break;
+            case RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT:
+                switch (rotTier)
+                {          
+                    case 0:
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);                           
+                        break;
+                    case 1:
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);                       
+                        break;
+                    case 2:
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);       
+                        break;
+                    case 3:
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        break;
+                }
+                break;
+            case RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT:
+                switch (rotTier)
+                {
+                    case 0:
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);                   
+                        break;
+                    case 1:
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);                     
+                        break;
+                    case 2:
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);                    
+                        break;
+                    case 3:
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        break;
+                }
+                break;
             case RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED:
                 switch (rotTier)
                 {
@@ -637,6 +648,31 @@ public class Room : MonoBehaviour
                         break;
                     case 1:
                         sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                        break;
+                }
+                break;
+            case RoomData.ROOM_TILE_TYPE.SIDE_DOUBLE_CONCAVE:
+                switch (rotTier)
+                {
+                    case 0:
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                        break;
+                    case 1:
+                        sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                        break;
+                    case 2:
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
+                        break;
+                    case 3:
+                        sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                        sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.SIDE);
                         break;
                 }
@@ -665,6 +701,12 @@ public class Room : MonoBehaviour
                         sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                         break;
                 }
+                break;
+            case RoomData.ROOM_TILE_TYPE.FULL_CONCAVE:
+                sides[COORDINATES.LEFT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                sides[COORDINATES.UP] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                sides[COORDINATES.RIGHT] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
+                sides[COORDINATES.DOWN] = roomData.GetRoomWall(RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER);
                 break;
             case RoomData.ROOM_TILE_TYPE.CONVEX_CONCAVE:
                 switch (rotTier)
@@ -806,6 +848,26 @@ public class Room : MonoBehaviour
                 else
                     Debug.LogError("Tile " + tType + " is not well defined for rotation purposes.");
                 break;
+            case RoomData.ROOM_TILE_TYPE.SIDE_DOUBLE_CONCAVE:
+                if (!tCoordinates.Contains(COORDINATES.DOWN))
+                    tier = 0;
+                else if (!tCoordinates.Contains(COORDINATES.LEFT))
+                    tier = 1;
+                else if (!tCoordinates.Contains(COORDINATES.UP))
+                    tier = 2;
+                else if (!tCoordinates.Contains(COORDINATES.RIGHT))
+                    tier = 3;
+                else
+                    Debug.LogError("Tile " + tType + " is not well defined for rotation purposes.");
+                break;
+            case RoomData.ROOM_TILE_TYPE.DOUBLE_EYED_CONCAVE:
+                if (!tCoordinates.Contains(COORDINATES.UPRIGHT) && !tCoordinates.Contains(COORDINATES.DOWNLEFT))
+                    tier = 0;
+                else if (!tCoordinates.Contains(COORDINATES.UPLEFT) && !tCoordinates.Contains(COORDINATES.DOWNRIGHT))
+                    tier = 1;
+                else
+                    Debug.LogError("Tile " + tType + " is not well defined for rotation purposes.");
+                break;
             case RoomData.ROOM_TILE_TYPE.DOUBLE_CONVEX:
                 if (tCoordinates.Contains(COORDINATES.DOWN))
                     tier = 0;
@@ -861,6 +923,26 @@ public class Room : MonoBehaviour
                     tier = 3;
                 else
                     Debug.LogError("Tile " + tType + " is not well defined for rotation purposes.");
+                break;
+            case RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT:
+                if (!tCoordinates.Contains(COORDINATES.DOWN))
+                    tier = 0;
+                else if (!tCoordinates.Contains(COORDINATES.LEFT))
+                    tier = 1;
+                else if (!tCoordinates.Contains(COORDINATES.UP))
+                    tier = 2;
+                else if (!tCoordinates.Contains(COORDINATES.RIGHT))
+                    tier = 3;
+                break;
+            case RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT:
+                if (!tCoordinates.Contains(COORDINATES.DOWN))
+                    tier = 0;
+                else if(!tCoordinates.Contains(COORDINATES.LEFT))
+                    tier = 1;
+                else if (!tCoordinates.Contains(COORDINATES.UP))
+                    tier = 2;
+                else if (!tCoordinates.Contains(COORDINATES.RIGHT))
+                    tier = 3;
                 break;
             default:
                 Debug.LogError("Tile type data is not well defined for rotation purposes.");
@@ -981,10 +1063,20 @@ public class Room : MonoBehaviour
                         tileType = RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER;
                         break;
                     case 2:
-                        tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED;
+                        //tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED;
+                        if ((tileCoordinates.Contains(COORDINATES.UPLEFT) && tileCoordinates.Contains(COORDINATES.UPRIGHT)) ||
+                            (tileCoordinates.Contains(COORDINATES.DOWNLEFT) && tileCoordinates.Contains(COORDINATES.DOWNRIGHT)) ||
+                            (tileCoordinates.Contains(COORDINATES.UPLEFT) && tileCoordinates.Contains(COORDINATES.DOWNLEFT)) ||
+                            (tileCoordinates.Contains(COORDINATES.UPRIGHT) && tileCoordinates.Contains(COORDINATES.DOWNRIGHT)))
+                            tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_CONCAVE;
+                        else
+                            tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_EYED_CONCAVE;
                         break;
                     case 1:
                         tileType = RoomData.ROOM_TILE_TYPE.TRIPLE_CONCAVE;
+                        break;
+                    case 0:
+                        tileType = RoomData.ROOM_TILE_TYPE.FULL_CONCAVE;
                         break;
                     default:
                         //Return adjacent type
@@ -994,8 +1086,34 @@ public class Room : MonoBehaviour
             case 3:
                 switch (neighbours)
                 {
+                    case 0:
+                        tileType = RoomData.ROOM_TILE_TYPE.SIDE_DOUBLE_CONCAVE;
+                        break;
                     case 1:
-                        tileType = RoomData.ROOM_TILE_TYPE.CONCAVE_CORNER;
+                        if ((!tileCoordinates.Contains(COORDINATES.DOWN) && tileCoordinates.Contains(COORDINATES.UPRIGHT)) ||
+                          (!tileCoordinates.Contains(COORDINATES.LEFT) && tileCoordinates.Contains(COORDINATES.DOWNRIGHT)) ||
+                          (!tileCoordinates.Contains(COORDINATES.UP) && tileCoordinates.Contains(COORDINATES.DOWNLEFT)) ||
+                          (!tileCoordinates.Contains(COORDINATES.RIGHT) && tileCoordinates.Contains(COORDINATES.UPLEFT)))
+                            tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT;
+                        else
+                            tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT;
+                        break;
+                    case 2:
+                        if ((!tileCoordinates.Contains(COORDINATES.UP) && tileCoordinates.Contains(COORDINATES.DOWNLEFT) && tileCoordinates.Contains(COORDINATES.DOWNRIGHT)) ||
+                       (!tileCoordinates.Contains(COORDINATES.DOWN) && tileCoordinates.Contains(COORDINATES.UPLEFT) && tileCoordinates.Contains(COORDINATES.UPRIGHT)) ||
+                       (!tileCoordinates.Contains(COORDINATES.RIGHT) && tileCoordinates.Contains(COORDINATES.UPLEFT) && tileCoordinates.Contains(COORDINATES.DOWNLEFT)) ||
+                       (!tileCoordinates.Contains(COORDINATES.LEFT) && tileCoordinates.Contains(COORDINATES.UPRIGHT) && tileCoordinates.Contains(COORDINATES.DOWNRIGHT)))
+                            tileType = RoomData.ROOM_TILE_TYPE.SIDE;
+                        else
+                        {
+                            if ((!tileCoordinates.Contains(COORDINATES.DOWN) && tileCoordinates.Contains(COORDINATES.UPRIGHT)) ||
+                         (!tileCoordinates.Contains(COORDINATES.LEFT) && tileCoordinates.Contains(COORDINATES.DOWNRIGHT)) ||
+                         (!tileCoordinates.Contains(COORDINATES.UP) && tileCoordinates.Contains(COORDINATES.DOWNLEFT)) ||
+                         (!tileCoordinates.Contains(COORDINATES.RIGHT) && tileCoordinates.Contains(COORDINATES.UPLEFT)))
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT;
+                            else
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT;
+                        }
                         break;
                     default:
                         //Return adjacent type
@@ -1009,9 +1127,22 @@ public class Room : MonoBehaviour
                         if (tileType == RoomData.ROOM_TILE_TYPE.CONVEX_CONCAVE)
                             tileType = RoomData.ROOM_TILE_TYPE.EMPTY;   //ILLEGAL
                         break;
+                    case 0:
+                        //Return adjacent type
+                        break;
                     default:
-                        if (tileType == RoomData.ROOM_TILE_TYPE.CONVEX_CONCAVE)
-                            tileType = RoomData.ROOM_TILE_TYPE.CONVEX_CORNER;
+                        if ((tileCoordinates.Contains(COORDINATES.DOWN) && tileCoordinates.Contains(COORDINATES.RIGHT) && 
+                            tileCoordinates.Contains(COORDINATES.DOWNRIGHT)) ||
+                            (tileCoordinates.Contains(COORDINATES.DOWN) && tileCoordinates.Contains(COORDINATES.LEFT) &&
+                            tileCoordinates.Contains(COORDINATES.DOWNLEFT)) ||
+                            (tileCoordinates.Contains(COORDINATES.UP) && tileCoordinates.Contains(COORDINATES.LEFT) &&
+                            tileCoordinates.Contains(COORDINATES.UPLEFT)) ||
+                            (tileCoordinates.Contains(COORDINATES.UP) && tileCoordinates.Contains(COORDINATES.RIGHT) &&
+                            tileCoordinates.Contains(COORDINATES.UPRIGHT)))
+                                tileType = RoomData.ROOM_TILE_TYPE.CONVEX_CORNER;
+
+                        //if (tileType == RoomData.ROOM_TILE_TYPE.CONVEX_CONCAVE)
+                        //    tileType = RoomData.ROOM_TILE_TYPE.CONVEX_CORNER;
                         break;
                 }
                 break;
@@ -1025,7 +1156,7 @@ public class Room : MonoBehaviour
                         tileType = RoomData.ROOM_TILE_TYPE.CONVEX_CORNER;
                         break;
                     case 2:
-                        tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED;
+                        //tileType = RoomData.ROOM_TILE_TYPE.DOUBLE_SIDED;
                         break;
                     case 1:
                         if (tileType == RoomData.ROOM_TILE_TYPE.CONVEX_CONCAVE)
