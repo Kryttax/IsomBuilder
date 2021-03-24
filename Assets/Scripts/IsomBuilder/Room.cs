@@ -15,11 +15,7 @@ namespace IsomBuilder
 
         public RoomProperties(string identifier, List<TileProperties> tProperties = null)
         {
-            if (tProperties != null)
-            {
-                tilesProperties = new List<TileProperties>(tProperties);       
-            }
-            else tilesProperties = new List<TileProperties>();
+            tilesProperties = tProperties != null ? new List<TileProperties>(tProperties) : new List<TileProperties>();
 
             roomIdentifier = identifier;
         }
@@ -69,17 +65,15 @@ public class Room : MonoBehaviour
         thisRoom.tempRoomSize = new List<Vector2>();
         thisRoom.tempRoomRemoval = new List<Vector2>();
 
-        if (tProperties != null)
-        {
-            for (int i = 0; i < tProperties.Count; ++i)
-                thisRoom.roomTilesPosition.Add(tProperties[i].tilePosition);
+        if (tProperties == null) return thisRoom;
+        for (int i = 0; i < tProperties.Count; ++i)
+            thisRoom.roomTilesPosition.Add(tProperties[i].tilePosition);
 
-            for (int i = 0; i < tProperties.Count; ++i)
-            {
-                Tile newTile = GenerateRoomTile(tProperties[i].tilePosition, thisRoom.gameObject, thisRoom.roomData, thisRoom.roomTilesPosition);
-                thisRoom.roomTiles.Add(newTile);
-            }
-        }      
+        for (int i = 0; i < tProperties.Count; ++i)
+        {
+            Tile newTile = GenerateRoomTile(tProperties[i].tilePosition, thisRoom.gameObject, thisRoom.roomData, thisRoom.roomTilesPosition);
+            thisRoom.roomTiles.Add(newTile);
+        }
 
         return thisRoom;
     }
@@ -125,10 +119,7 @@ public class Room : MonoBehaviour
     {
         int result = rTiles.FindIndex(pos => pos.tileData.tilePosition.x == tilePosition.x && pos.tileData.tilePosition.y == tilePosition.y);
 
-        if (result == -1)
-            return false;
-
-        return true;
+        return result != -1;
     }
 
     public static bool IsTileInRoom(List<Tile> rTiles, Vector2 tilePosition, out Tile tileInRoom)
@@ -187,19 +178,16 @@ public class Room : MonoBehaviour
         for (int i = 0; i < tempRoomRemoval.Count; ++i)
         {
             Tile tileToDelete = roomTiles.Find(x => x.tileData.tilePosition == tempRoomRemoval[i]);
-            if (tileToDelete)
-            {
-                if (tileToDelete.tileData.isAccess)
-                    RoomsManager.instance.PropagateChangesToAccess(tileToDelete.tileData.tilePosition);
-                RoomsManager.instance.GenerateEmptyRock(tileToDelete.tileData.tilePosition);
+            if (!tileToDelete) continue;
+            if (tileToDelete.tileData.isAccess)
+                RoomsManager.instance.PropagateChangesToAccess(tileToDelete.tileData.tilePosition);
+            RoomsManager.instance.GenerateEmptyRock(tileToDelete.tileData.tilePosition);
 
-                roomTiles.Remove(tileToDelete);
-                roomTilesPosition.Remove(tileToDelete.tileData.tilePosition);
-                properties.tilesProperties.Remove(tileToDelete.tileData);
+            roomTiles.Remove(tileToDelete);
+            roomTilesPosition.Remove(tileToDelete.tileData.tilePosition);
+            properties.tilesProperties.Remove(tileToDelete.tileData);
 
-                UpdateTileNeighbours(tileToDelete, roomTiles);
-                //UpdateTileContext(tileToDelete);
-            }
+            UpdateTileNeighbours(tileToDelete, roomTiles);
         }
 
         tempRoomRemoval.Clear();
@@ -404,7 +392,7 @@ public class Room : MonoBehaviour
             case COORDINATES.DOWNRIGHT:
                 return new Vector2(centralTile.x + 1, centralTile.y - 1);
             default:
-                Debug.LogError("Coordinate not defined! Please check coordinate is correctly assigned.");
+                //Debug.LogError("Coordinate not defined! Please check coordinate is correctly assigned.");
                 return centralTile;
         }
     }
@@ -862,9 +850,9 @@ public class Room : MonoBehaviour
                 break;
             case RoomData.ROOM_TILE_TYPE.DOUBLE_EYED_CONCAVE:
                 if (!tCoordinates.Contains(COORDINATES.UPRIGHT) && !tCoordinates.Contains(COORDINATES.DOWNLEFT))
-                    tier = 0;
-                else if (!tCoordinates.Contains(COORDINATES.UPLEFT) && !tCoordinates.Contains(COORDINATES.DOWNRIGHT))
                     tier = 1;
+                else if (!tCoordinates.Contains(COORDINATES.UPLEFT) && !tCoordinates.Contains(COORDINATES.DOWNRIGHT))
+                    tier = 0;
                 else
                     Debug.LogError("Tile " + tType + " is not well defined for rotation purposes.");
                 break;
@@ -1090,13 +1078,47 @@ public class Room : MonoBehaviour
                         tileType = RoomData.ROOM_TILE_TYPE.SIDE_DOUBLE_CONCAVE;
                         break;
                     case 1:
-                        if ((!tileCoordinates.Contains(COORDINATES.DOWN) && tileCoordinates.Contains(COORDINATES.UPRIGHT)) ||
-                          (!tileCoordinates.Contains(COORDINATES.LEFT) && tileCoordinates.Contains(COORDINATES.DOWNRIGHT)) ||
-                          (!tileCoordinates.Contains(COORDINATES.UP) && tileCoordinates.Contains(COORDINATES.DOWNLEFT)) ||
-                          (!tileCoordinates.Contains(COORDINATES.RIGHT) && tileCoordinates.Contains(COORDINATES.UPLEFT)))
-                            tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT;
-                        else
-                            tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT;
+                        //if ((!tileCoordinates.Contains(COORDINATES.DOWN) && tileCoordinates.Contains(COORDINATES.UPRIGHT)) ||
+                        //  (!tileCoordinates.Contains(COORDINATES.LEFT) && tileCoordinates.Contains(COORDINATES.DOWNRIGHT)) ||
+                        //  (!tileCoordinates.Contains(COORDINATES.UP) && tileCoordinates.Contains(COORDINATES.DOWNLEFT)) ||
+                        //  (!tileCoordinates.Contains(COORDINATES.RIGHT) && tileCoordinates.Contains(COORDINATES.UPLEFT)))
+                        if (!tileCoordinates.Contains(COORDINATES.DOWN))
+                        {
+                            if (tileCoordinates.Contains(COORDINATES.UPRIGHT))
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT;
+                            else if (tileCoordinates.Contains(COORDINATES.UPLEFT))
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT;
+                            else
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_DOUBLE_CONCAVE;
+                        }
+                        else if
+                           (!tileCoordinates.Contains(COORDINATES.LEFT))
+                        {
+                            if (tileCoordinates.Contains(COORDINATES.DOWNRIGHT))
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT;
+                            else if (tileCoordinates.Contains(COORDINATES.UPRIGHT))
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT;
+                            else
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_DOUBLE_CONCAVE;
+                        }
+                        else if (!tileCoordinates.Contains(COORDINATES.UP))
+                        {
+                            if (tileCoordinates.Contains(COORDINATES.DOWNLEFT))
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT;
+                            else if (tileCoordinates.Contains(COORDINATES.DOWNRIGHT))
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT;
+                            else
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_DOUBLE_CONCAVE;
+                        }
+                        else if (!tileCoordinates.Contains(COORDINATES.RIGHT))
+                        {
+                            if (tileCoordinates.Contains(COORDINATES.UPLEFT))
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT;
+                            else if (tileCoordinates.Contains(COORDINATES.DOWNLEFT))
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT;
+                            else
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_DOUBLE_CONCAVE;
+                        }
                         break;
                     case 2:
                         if ((!tileCoordinates.Contains(COORDINATES.UP) && tileCoordinates.Contains(COORDINATES.DOWNLEFT) && tileCoordinates.Contains(COORDINATES.DOWNRIGHT)) ||
@@ -1106,13 +1128,100 @@ public class Room : MonoBehaviour
                             tileType = RoomData.ROOM_TILE_TYPE.SIDE;
                         else
                         {
-                            if ((!tileCoordinates.Contains(COORDINATES.DOWN) && tileCoordinates.Contains(COORDINATES.UPRIGHT)) ||
-                         (!tileCoordinates.Contains(COORDINATES.LEFT) && tileCoordinates.Contains(COORDINATES.DOWNRIGHT)) ||
-                         (!tileCoordinates.Contains(COORDINATES.UP) && tileCoordinates.Contains(COORDINATES.DOWNLEFT)) ||
-                         (!tileCoordinates.Contains(COORDINATES.RIGHT) && tileCoordinates.Contains(COORDINATES.UPLEFT)))
-                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT;
-                            else
+                            if(!tileCoordinates.Contains(COORDINATES.DOWN))
+                            {
+                                if(tileCoordinates.Contains(COORDINATES.UPRIGHT))
+                                    tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT;
+                                else if(tileCoordinates.Contains(COORDINATES.UPLEFT))
+                                    tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT;
+                                else
+                                    tileType = RoomData.ROOM_TILE_TYPE.SIDE_DOUBLE_CONCAVE;
+                            }
+                            else if(!tileCoordinates.Contains(COORDINATES.LEFT))
+                            {
+                                if (tileCoordinates.Contains(COORDINATES.DOWNRIGHT))
+                                    tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT;
+                                else if (tileCoordinates.Contains(COORDINATES.UPRIGHT))
+                                    tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT;
+                                else
+                                    tileType = RoomData.ROOM_TILE_TYPE.SIDE_DOUBLE_CONCAVE;
+                            }
+                            else if (!tileCoordinates.Contains(COORDINATES.RIGHT))
+                            {
+                                if (tileCoordinates.Contains(COORDINATES.UPLEFT))
+                                    tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT;
+                                else if (tileCoordinates.Contains(COORDINATES.DOWNLEFT))
+                                    tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT;
+                                else
+                                    tileType = RoomData.ROOM_TILE_TYPE.SIDE_DOUBLE_CONCAVE;
+                            }
+                            else if (!tileCoordinates.Contains(COORDINATES.UP))
+                            {
+                                if (tileCoordinates.Contains(COORDINATES.DOWNLEFT))
+                                    tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT;
+                                else if (tileCoordinates.Contains(COORDINATES.DOWNRIGHT))
+                                    tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT;
+                                else
+                                    tileType = RoomData.ROOM_TILE_TYPE.SIDE_DOUBLE_CONCAVE;
+                            }
+                         //   if ((!tileCoordinates.Contains(COORDINATES.DOWN) && tileCoordinates.Contains(COORDINATES.UPRIGHT)) ||
+                         //(!tileCoordinates.Contains(COORDINATES.LEFT) && tileCoordinates.Contains(COORDINATES.DOWNRIGHT)) ||
+                         //(!tileCoordinates.Contains(COORDINATES.UP) && tileCoordinates.Contains(COORDINATES.DOWNLEFT)) ||
+                         //(!tileCoordinates.Contains(COORDINATES.RIGHT) && tileCoordinates.Contains(COORDINATES.UPLEFT)))
+                         //       tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT;
+                         //   else
+                         //   {
+                         //       //tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT;
+                         //       tileType = RoomData.ROOM_TILE_TYPE.SIDE_DOUBLE_CONCAVE;
+                         //   }
+                                
+                        }
+                        break;
+                    case 3:
+                        if (!tileCoordinates.Contains(COORDINATES.DOWN))
+                        {
+                            if (tileCoordinates.Contains(COORDINATES.UPLEFT) && !tileCoordinates.Contains(COORDINATES.UPRIGHT))
                                 tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT;
+                            else if (!tileCoordinates.Contains(COORDINATES.UPLEFT) && tileCoordinates.Contains(COORDINATES.UPRIGHT))
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT;
+                            else if (tileCoordinates.Contains(COORDINATES.UPLEFT) && tileCoordinates.Contains(COORDINATES.UPRIGHT))
+                                break;
+                            else
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_DOUBLE_CONCAVE;
+                        }
+                        else if
+                           (!tileCoordinates.Contains(COORDINATES.LEFT))
+                        {
+                            if (tileCoordinates.Contains(COORDINATES.UPRIGHT) && !tileCoordinates.Contains(COORDINATES.DOWNRIGHT))
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT;
+                            else if (!tileCoordinates.Contains(COORDINATES.UPRIGHT) && tileCoordinates.Contains(COORDINATES.DOWNRIGHT))
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT;
+                            else if (tileCoordinates.Contains(COORDINATES.UPRIGHT) && tileCoordinates.Contains(COORDINATES.DOWNRIGHT))
+                                break;
+                            else
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_DOUBLE_CONCAVE;
+                        }
+                        else if (!tileCoordinates.Contains(COORDINATES.UP))
+                        {
+                            if (tileCoordinates.Contains(COORDINATES.DOWNLEFT) && !tileCoordinates.Contains(COORDINATES.DOWNRIGHT))
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT;
+                            else if (!tileCoordinates.Contains(COORDINATES.DOWNLEFT) && tileCoordinates.Contains(COORDINATES.DOWNRIGHT))
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT;
+                            else if (tileCoordinates.Contains(COORDINATES.DOWNLEFT) && tileCoordinates.Contains(COORDINATES.DOWNRIGHT))
+                                break;
+                            else
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_DOUBLE_CONCAVE;
+                        }
+                        else if (!tileCoordinates.Contains(COORDINATES.RIGHT))
+                        {
+                            if (tileCoordinates.Contains(COORDINATES.UPLEFT) && !tileCoordinates.Contains(COORDINATES.DOWNLEFT))
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_LEFT;
+                            else if (!tileCoordinates.Contains(COORDINATES.UPLEFT) && tileCoordinates.Contains(COORDINATES.DOWNLEFT))
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_CONCAVE_RIGHT;
+                            else if (tileCoordinates.Contains(COORDINATES.UPLEFT) && tileCoordinates.Contains(COORDINATES.DOWNLEFT))
+                                break;
+                            else
+                                tileType = RoomData.ROOM_TILE_TYPE.SIDE_DOUBLE_CONCAVE;
                         }
                         break;
                     default:
