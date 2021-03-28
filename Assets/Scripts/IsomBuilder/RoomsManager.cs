@@ -443,23 +443,29 @@ public class RoomsManager : MonoBehaviour
 
     public void FinishRoomEditing()
     {
-        currentRoom = schemeRoom;
-        Serializer.Config.Set("Total Rooms", rooms.Count);
-        Room.SaveRoom(currentRoom.properties.roomIdentifier, currentRoom.properties);
+        if (schemeRoom.roomData.tilePrefabs.Length > 0)
+        {
+            currentRoom = schemeRoom;
+            Serializer.Config.Set("Total Rooms", rooms.Count);
+            Room.SaveRoom(currentRoom.properties.roomIdentifier, currentRoom.properties);
+        }
         schemeRoom = null;
         currentRoom = null;
     }
 
     public void FinishRoomConstruction()
     {
-        currentRoom = schemeRoom;
-        rooms.Add(currentRoom);
+        if(schemeRoom.roomData.tilePrefabs.Length > 0)
+        {
+            currentRoom = schemeRoom;
+            rooms.Add(currentRoom);
 
-        for (int i = 0; i < currentRoom.roomTiles.Count; ++i)
-            RemoveRock(currentRoom.roomTiles[i].tileData.tilePosition);
+            for (int i = 0; i < currentRoom.roomTiles.Count; ++i)
+                RemoveRock(currentRoom.roomTiles[i].tileData.tilePosition);
 
-        Serializer.Config.Set("Total Rooms", rooms.Count);
-        Room.SaveRoom(currentRoom.properties.roomIdentifier, currentRoom.properties);
+            Serializer.Config.Set("Total Rooms", rooms.Count);
+            Room.SaveRoom(currentRoom.properties.roomIdentifier, currentRoom.properties);         
+        }
         schemeRoom = null;
         currentRoom = null;
     }

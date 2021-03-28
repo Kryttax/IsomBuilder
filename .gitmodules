@@ -1,0 +1,3 @@
+[submodule "Assets/KryTween"]
+	path = Assets/KryTween
+	url = https://github.com/Kryttax/KryTween.git
