@@ -48,6 +48,8 @@ public class RoomsManager : MonoBehaviour
 
     private void Start()
     {
+        StateManager.ChangeStateTo(StateManager.BUILD_MODE.NONE);
+
         rooms = new List<Room>();
         emptyTiles = new List<Vector2>();
         occupiedTiles = new List<Vector2>();
@@ -80,6 +82,10 @@ public class RoomsManager : MonoBehaviour
                 loadedRoom.UpdateRoomTiles();
             }
         }
+
+        //UI Set-up
+        for (int i = 0; i < roomTypes.Length; ++i)
+            IsomUIManager.instance.CreateRoomTypeButton(roomTypes[i].roomID);
     }
 
     private void BuildRocks()

@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class MouseSelector : MonoBehaviour
 {
-    enum BUILD_MODE { NONE, BUILDING, EDITING }
-   // Vector3 prevMousePos;
-    BUILD_MODE buildingMode = BUILD_MODE.NONE;
+    IsomBuilder.StateManager.BUILD_MODE buildingMode;
+
     bool destroyMode = false;
     public Texture selectTexture;
     public Shader transparentShaderMask;
@@ -26,9 +25,14 @@ public class MouseSelector : MonoBehaviour
 
     private void Awake()
     {
-        finishRoomButton.onClick.AddListener(() => { OnFinishRoomButton(); });
-        buildRoomButton.onClick.AddListener(() => { OnBuildRoomButton(); });
-        editRoomButton.onClick.AddListener(() => { OnEditRoomButton(); });
+        //finishRoomButton.onClick.AddListener(() => { OnFinishRoomButton(); });
+        //buildRoomButton.onClick.AddListener(() => { OnBuildRoomButton(); });
+        //editRoomButton.onClick.AddListener(() => { OnEditRoomButton(); });
+    }
+
+    private void Start()
+    {
+        buildingMode = IsomBuilder.StateManager.BuildingMode;
     }
 
     private void Update()
@@ -53,35 +57,26 @@ public class MouseSelector : MonoBehaviour
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    Debug.Log("Mouse Pressed!");
-                    //prevMousePos = gridPoint;
-                    //if(buildingMode == BUILD_MODE.NONE)
-                    //{
-                    //    RoomsManager.instance.StartRoomConstruction();
-                    //    buildingMode = BUILD_MODE.BUILDING;
-                    //}
-                    //RoomsManager.instance.AddTileToRoom(gridPoint);
-
-                    switch (buildingMode)
+                    switch (IsomBuilder.StateManager.BuildingMode)
                     {
-                        case BUILD_MODE.NONE:
+                        case IsomBuilder.StateManager.BUILD_MODE.NONE:
                             break;
-                        case BUILD_MODE.BUILDING:
+                        case IsomBuilder.StateManager.BUILD_MODE.BUILDING:
                             orgBoxPos = gridPoint;
                             endBoxPos = gridPoint;
                             RoomsManager.instance.FillRoomScheme(orgBoxPos, endBoxPos);
                             break;
-                        case BUILD_MODE.EDITING:
+                        case IsomBuilder.StateManager.BUILD_MODE.EDITING:
                             orgBoxPos = gridPoint;
                             endBoxPos = gridPoint;
 
-                            if (RoomsManager.instance.GetOccupiedTileAt(gridPoint) != -1 &&
-                                RoomsManager.instance.AssignRoomEdit(gridPoint))   //Double Check
-                            {
-                                //buildingMode = BUILD_MODE.BUILDING;
-                                //orgBoxPos = gridPoint;
-                                //RoomsManager.instance.FillRoomScheme(orgBoxPos, endBoxPos);
-                            }
+                            //if (RoomsManager.instance.GetOccupiedTileAt(gridPoint) != -1 &&
+                            //    RoomsManager.instance.AssignRoomEdit(gridPoint))   //Double Check
+                            //{
+                            //    //buildingMode = BUILD_MODE.BUILDING;
+                            //    //orgBoxPos = gridPoint;
+                            //    //RoomsManager.instance.FillRoomScheme(orgBoxPos, endBoxPos);
+                            //}
                             break;
                     }
                 }
@@ -90,7 +85,7 @@ public class MouseSelector : MonoBehaviour
                 {
                     //Debug.Log("Mouse being HELD!");
 
-                    if ((buildingMode == BUILD_MODE.BUILDING || buildingMode == BUILD_MODE.EDITING) && 
+                    if ((IsomBuilder.StateManager.BuildingMode == IsomBuilder.StateManager.BUILD_MODE.BUILDING || IsomBuilder.StateManager.BuildingMode == IsomBuilder.StateManager.BUILD_MODE.EDITING) && 
                         endBoxPos != gridPoint)
                     {
                         endBoxPos = gridPoint;
@@ -104,7 +99,7 @@ public class MouseSelector : MonoBehaviour
                 {
                     Debug.Log("Mouse Released!");
                     
-                    if (buildingMode == BUILD_MODE.BUILDING || buildingMode == BUILD_MODE.EDITING)
+                    if (IsomBuilder.StateManager.BuildingMode == IsomBuilder.StateManager.BUILD_MODE.BUILDING || IsomBuilder.StateManager.BuildingMode == IsomBuilder.StateManager.BUILD_MODE.EDITING)
                     {
                         //endBoxPos = gridPoint;
                         //RoomsManager.instance.FillRoom(orgBoxPos, endBoxPos);
@@ -138,13 +133,13 @@ public class MouseSelector : MonoBehaviour
 
                     switch (buildingMode)
                     {
-                        case BUILD_MODE.NONE:
+                        case IsomBuilder.StateManager.BUILD_MODE.NONE:
                             break;
-                        case BUILD_MODE.BUILDING:
+                        case IsomBuilder.StateManager.BUILD_MODE.BUILDING:
                             orgBoxPos = gridPoint;
                             endBoxPos = gridPoint;
                             break;
-                        case BUILD_MODE.EDITING:
+                        case IsomBuilder.StateManager.BUILD_MODE.EDITING:
                             //if (RoomsManager.instance.GetOccupiedTileAt(gridPoint) != -1 &&
                             //    RoomsManager.instance.AssignRoomEdit(gridPoint))   //Double Check
                             orgBoxPos = gridPoint;
@@ -164,7 +159,7 @@ public class MouseSelector : MonoBehaviour
                 {
                     //Debug.Log("Mouse being HELD!");
 
-                    if (buildingMode == BUILD_MODE.BUILDING || buildingMode == BUILD_MODE.EDITING)
+                    if (buildingMode == IsomBuilder.StateManager.BUILD_MODE.BUILDING || buildingMode == IsomBuilder.StateManager.BUILD_MODE.EDITING)
                     {
                         endBoxPos = gridPoint;
                         RoomsManager.instance.EmptyRoomScheme(orgBoxPos, endBoxPos);
@@ -175,7 +170,7 @@ public class MouseSelector : MonoBehaviour
                 {
                     Debug.Log("RIGHT Mouse Released!");
 
-                    if (buildingMode == BUILD_MODE.BUILDING || buildingMode == BUILD_MODE.EDITING)
+                    if (buildingMode == IsomBuilder.StateManager.BUILD_MODE.BUILDING || buildingMode == IsomBuilder.StateManager.BUILD_MODE.EDITING)
                     {
                         // endBoxPos = gridPoint;
                         //RoomsManager.instance.EmptyRoom();
@@ -199,31 +194,41 @@ public class MouseSelector : MonoBehaviour
 
     public void OnFinishRoomButton()
     {
-        if (buildingMode == BUILD_MODE.BUILDING)
+        if (buildingMode == IsomBuilder.StateManager.BUILD_MODE.BUILDING)
             RoomsManager.instance.FinishRoomConstruction();
-        else if(buildingMode == BUILD_MODE.EDITING)
+        else if(buildingMode == IsomBuilder.StateManager.BUILD_MODE.EDITING)
             RoomsManager.instance.FinishRoomEditing();
 
-        buildingMode = BUILD_MODE.NONE;
+        buildingMode = IsomBuilder.StateManager.BUILD_MODE.NONE;
     }
 
     public void OnBuildRoomButton()
     {
-        if (buildingMode == BUILD_MODE.NONE)
+        if (buildingMode == IsomBuilder.StateManager.BUILD_MODE.NONE)
         {
-            buildingMode = BUILD_MODE.BUILDING;
+            buildingMode = IsomBuilder.StateManager.BUILD_MODE.BUILDING;
             RoomsManager.instance.StartRoomConstruction();
             RoomsManager.instance.StartRoomScheme();
         }
     }
 
+    //public void OnBuildRoomTypeButton(RoomData.ROOM_ID type)
+    //{
+    //    if (buildingMode == IsomBuilder.StateManager.BUILD_MODE.NONE)
+    //    {
+    //        buildingMode = IsomBuilder.StateManager.BUILD_MODE.BUILDING;
+    //        RoomsManager.instance.StartRoomConstruction(type);
+    //        RoomsManager.instance.StartRoomScheme(type);
+    //    }
+    //}
+
     public void OnEditRoomButton()
     {
-        if (buildingMode == BUILD_MODE.BUILDING)
+        if (buildingMode == IsomBuilder.StateManager.BUILD_MODE.BUILDING)
         {
             OnFinishRoomButton();
         }
 
-        buildingMode = BUILD_MODE.EDITING;
+        buildingMode = IsomBuilder.StateManager.BUILD_MODE.EDITING;
     }
 }
